@@ -9,6 +9,12 @@ export const DEFAULT_OPTIONS: IOptions = {
   userId: 0
 }
 export const DESCRIPTION = "This is an AI voice assistant powered by ASTRA.ai framework, Agora, Azure and ChatGPT."
+export const GRAPH_NAME_OPTIONS = [
+  {
+    label: "transcribe-bedrock-polly",
+    value: "va.transcribe-bedrock.polly"
+  }
+]
 export const LANG_OPTIONS = [
   {
     label: "English",

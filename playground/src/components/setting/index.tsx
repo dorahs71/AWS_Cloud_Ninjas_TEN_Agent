@@ -3,7 +3,8 @@
 import { setAgentConnected } from "@/store/reducers/global"
 import {
   DESCRIPTION, useAppDispatch, useAppSelector, apiPing,
-  LANG_OPTIONS, VOICE_OPTIONS, apiStartService, apiStopService
+  LANG_OPTIONS, VOICE_OPTIONS, apiStartService, apiStopService,
+  GRAPH_NAME_OPTIONS
 } from "@/common"
 import Info from "./Info"
 import Status from "./status"
@@ -22,6 +23,7 @@ const Setting = () => {
   const agentConnected = useAppSelector(state => state.global.agentConnected)
   const channel = useAppSelector(state => state.global.options.channel)
   const userId = useAppSelector(state => state.global.options.userId)
+  const [graphName, setGraphName] = useState(GRAPH_NAME_OPTIONS[0]['value'])
   const [lang, setLang] = useState("en-US")
   const [voice, setVoice] = useState("male")
   const [loading, setLoading] = useState(false)
@@ -55,7 +57,8 @@ const Setting = () => {
         channel,
         userId,
         language: lang,
-        voiceType: voice
+        voiceType: voice,
+        graphName: graphName
       })
       const { code, msg } = res || {}
       if (code != 0) {
@@ -108,6 +111,12 @@ const Setting = () => {
     {/* status */}
     <Status></Status>
     {/* select */}
+    <section className={styles.selectWrapper}>
+      <div className={styles.title}>GraphName</div>
+      <Select disabled={agentConnected} className={`${styles.select} dark`} value={graphName} options={GRAPH_NAME_OPTIONS} onChange={v => {
+        setGraphName(v)
+      }}></Select>
+    </section>
     <section className={styles.selectWrapper}>
       <div className={styles.title}>LANGUAGE</div>
       <Select disabled={agentConnected} className={`${styles.select} dark`} value={lang} options={LANG_OPTIONS} onChange={v => {
