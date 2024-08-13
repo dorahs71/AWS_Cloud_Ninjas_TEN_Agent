@@ -56,6 +56,8 @@ class PollyTTSExtension(Extension):
             except Exception as err:
                 logger.debug(f"GetProperty optional {optional_param} failed, err: {err}. Using default value: {polly_config.__getattribute__(optional_param)}")
 
+        polly_config.validate()
+
         self.polly = PollyWrapper(polly_config)
         self.frame_size = int(int(polly_config.sample_rate) * self.number_of_channels * self.bytes_per_sample / 100)
 

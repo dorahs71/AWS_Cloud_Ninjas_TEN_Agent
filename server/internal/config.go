@@ -107,6 +107,7 @@ var (
 	startPropMap = map[string][]Prop{
 		"AgoraAsrLanguage": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "agora_asr_language"},
+			{ExtensionName: extensionNameTranscribeAsr, Property: "lang_code"},
 		},
 		"ChannelName": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "channel"},
@@ -120,6 +121,7 @@ var (
 		"VoiceType": {
 			{ExtensionName: extensionNameAzureTTS, Property: "azure_synthesis_voice_name"},
 			{ExtensionName: extensionNameElevenlabsTTS, Property: "voice_id"},
+			{ExtensionName: extensionNamePollyTTS, Property: "voice"},
 		},
 	}
 

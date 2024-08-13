@@ -7,6 +7,7 @@ from rte import (
     CmdResult,
 )
 
+import json
 import asyncio
 import threading
 
@@ -55,10 +56,16 @@ class TranscribeAsrExtension(Extension):
         rte.on_start_done()
 
     def put_pcm_frame(self, pcm_frame: PcmFrame) -> None:
+        if self.loop.is_closed():
+            logger.warning("Event loop is closed, cannot enqueue frame")
+            return
+
         try:
             asyncio.run_coroutine_threadsafe(self.queue.put(pcm_frame), self.loop).result(timeout=0.1)
         except asyncio.QueueFull:
             logger.exception("Queue is full, dropping frame")
+        except asyncio.TimeoutError:
+            logger.warning("Timeout while putting frame in queue")
         except Exception as e:
             logger.exception(f"Error putting frame in queue: {e}")
 
@@ -81,10 +88,16 @@ class TranscribeAsrExtension(Extension):
         logger.info("TranscribeAsrExtension on_cmd")
         cmd_json = cmd.to_json()
         logger.info("TranscribeAsrExtension on_cmd json: " + cmd_json)
+        try:
+            cmd_json = json.loads(cmd_json)
 
-        cmdName = cmd.get_name()
-        logger.info("got cmd %s" % cmdName)
+            cmdName = cmd.get_name()
+            logger.info("got cmd %s" % cmdName)
+            if cmdName == "on_user_joined":
+                self.transcribe.set_user_id(cmd_json.get('user_id', '0'), cmd_json.get('remote_user_id', '0'))
 
-        cmd_result = CmdResult.create(StatusCode.OK)
-        cmd_result.set_property_string("detail", "success")
-        rte.return_result(cmd_result, cmd)
+            cmd_result = CmdResult.create(StatusCode.OK)
+            cmd_result.set_property_string("detail", "success")
+            rte.return_result(cmd_result, cmd)
+        except Exception as e:
+            logger.exception(f"Error handling cmd: {e}")
