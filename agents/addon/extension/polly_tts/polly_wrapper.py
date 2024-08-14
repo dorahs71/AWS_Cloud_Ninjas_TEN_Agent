@@ -55,7 +55,7 @@ class PollyConfig:
 
     def validate(self):
         if not self.voice in VOICE_ENGINE_MAP.keys():
-            raise f"Invalid voice '{self.voice}'. Must be one of {list(VOICE_ENGINE_MAP.keys())}."
+            raise ValueError(f"Invalid voice '{self.voice}'. Must be one of {list(VOICE_ENGINE_MAP.keys())}.")
 
         if not self.engine in VOICE_ENGINE_MAP[self.voice]:
             logger.warn(f"Invalid engine '{self.engine}' for voice '{self.voice}'. Must be one of {VOICE_ENGINE_MAP[self.voice]}. Fallback to {VOICE_ENGINE_MAP[self.voice][0]}")
