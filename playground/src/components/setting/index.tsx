@@ -4,7 +4,7 @@ import { setAgentConnected } from "@/store/reducers/global"
 import {
   DESCRIPTION, useAppDispatch, useAppSelector, apiPing,
   LANG_OPTIONS, VOICE_OPTIONS, apiStartService, apiStopService,
-  GRAPH_NAME_OPTIONS
+  MODE_OPTIONS, GRAPH_NAME_OPTIONS
 } from "@/common"
 import Info from "./Info"
 import Status from "./status"
@@ -23,8 +23,10 @@ const Setting = () => {
   const agentConnected = useAppSelector(state => state.global.agentConnected)
   const channel = useAppSelector(state => state.global.options.channel)
   const userId = useAppSelector(state => state.global.options.userId)
+  const [mode, setMode] = useState("chat")
   const [graphName, setGraphName] = useState(GRAPH_NAME_OPTIONS[0]['value'])
   const [lang, setLang] = useState("en-US")
+  const [outputLanguage, setOutputLanguage] = useState(lang)
   const [voice, setVoice] = useState("male")
   const [loading, setLoading] = useState(false)
 
@@ -53,12 +55,18 @@ const Setting = () => {
       message.success("Agent disconnected")
       stopPing()
     } else {
+      if (mode == "chat") {
+        setOutputLanguage(lang)
+      }
+
       const res = await apiStartService({
         channel,
         userId,
         language: lang,
         voiceType: voice,
-        graphName: graphName
+        graphName: graphName,
+        mode: mode,
+        outputLanguage: outputLanguage
       })
       const { code, msg } = res || {}
       if (code != 0) {
@@ -112,16 +120,32 @@ const Setting = () => {
     <Status></Status>
     {/* select */}
     <section className={styles.selectWrapper}>
-      <div className={styles.title}>GraphName</div>
+      <div className={styles.title}>GRAPH NAME</div>
       <Select disabled={agentConnected} className={`${styles.select} dark`} value={graphName} options={GRAPH_NAME_OPTIONS} onChange={v => {
         setGraphName(v)
       }}></Select>
-    </section>
-    <section className={styles.selectWrapper}>
-      <div className={styles.title}>LANGUAGE</div>
+
+      <div className={styles.title}>AGENT MODE</div>
+      <Select disabled={agentConnected} className={`${styles.select} dark`} value={mode} options={MODE_OPTIONS} onChange={v => {
+        setMode(v)
+      }}></Select>
+
+      <div className={styles.title}>INPUT LANGUAGE</div>
       <Select disabled={agentConnected} className={`${styles.select} dark`} value={lang} options={LANG_OPTIONS} onChange={v => {
         setLang(v)
+
+        if (mode == "chat") {
+          setOutputLanguage(v)
+        }
       }}></Select>
+
+      {/* if mode == translate, show output_language options */}
+      {mode == "translate" ? <>
+        <div className={styles.title}>OUTPUT LANGUAGE</div>
+        <Select disabled={agentConnected} className={`${styles.select} dark`} value={outputLanguage} options={LANG_OPTIONS} onChange={v => {
+          setOutputLanguage(v)
+        }}></Select>
+      </> : null}
     </section>
     <section className={styles.selectWrapper}>
       <div className={styles.title}>Voice</div>

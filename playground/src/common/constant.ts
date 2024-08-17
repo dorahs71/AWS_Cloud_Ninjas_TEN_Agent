@@ -8,8 +8,30 @@ export const DEFAULT_OPTIONS: IOptions = {
   userName: "",
   userId: 0
 }
-export const DESCRIPTION = "This is an AI voice assistant powered by ASTRA.ai framework, Agora, Azure and ChatGPT."
+export const DESCRIPTION = "This is an AI voice assistant powered by ASTRA.ai framework, Agora, Amazon Bedrock, Amazon Transcribe and Amazon SageMaker."
+export const MODE_OPTIONS = [
+  {
+    label: "Translate",
+    value: "translate"
+  },
+  {
+    label: "Chat",
+    value: "chat"
+  }
+]
 export const GRAPH_NAME_OPTIONS = [
+  {
+    label: "translate-transcribe-bedrock-polly",
+    value: "translate.transcribe-bedrock.polly"
+  },
+  {
+    label: "translate-transcribe-bedrock-sagemaker",
+    value: "translate.transcribe-bedrock.sagemaker-tts"
+  },
+  {
+    label: "transcribe-bedrock-sagemaker",
+    value: "va.transcribe-bedrock.sagemaker-tts"
+  },
   {
     label: "transcribe-bedrock-polly",
     value: "va.transcribe-bedrock.polly"
@@ -23,6 +45,14 @@ export const LANG_OPTIONS = [
   {
     label: "Chinese",
     value: "zh-CN"
+  },
+  {
+    label: "Japanese",
+    value: "ja-JP"
+  },
+  {
+    label: "French",
+    value: "fr-FR"
   }
 ]
 export const VOICE_OPTIONS = [

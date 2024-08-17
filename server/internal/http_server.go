@@ -48,6 +48,8 @@ type StartReq struct {
 	AgoraAsrLanguage string `json:"agora_asr_language,omitempty"`
 	ChannelName      string `json:"channel_name,omitempty"`
 	GraphName        string `json:"graph_name,omitempty"`
+	Mode             string `json:"mode,omitempty"`
+	OutputLanguage   string `json:"output_language,omitempty"`
 	RemoteStreamId   uint32 `json:"remote_stream_id,omitempty"`
 	Token            string `json:"token,omitempty"`
 	VoiceType        string `json:"voice_type,omitempty"`
@@ -246,6 +248,11 @@ func (s *HttpServer) processProperty(req *StartReq) (propertyJsonFile string, lo
 		graphName = graphNameDefault
 	}
 
+	// Set output language
+	if req.OutputLanguage == "" {
+		req.OutputLanguage = req.AgoraAsrLanguage
+	}
+
 	// Generate token
 	req.Token = s.config.AppId
 	if s.config.AppCertificate != "" {
@@ -265,7 +272,7 @@ func (s *HttpServer) processProperty(req *StartReq) (propertyJsonFile string, lo
 		if val := getFieldValue(req, key); val != "" {
 			for _, prop := range props {
 				if key == "VoiceType" {
-					val = voiceNameMap[req.AgoraAsrLanguage][prop.ExtensionName][req.VoiceType]
+					val = voiceNameMap[req.OutputLanguage][prop.ExtensionName][req.VoiceType]
 				}
 				propertyJson, _ = sjson.Set(propertyJson, fmt.Sprintf(`%s.nodes.#(name=="%s").property.%s`, graph, prop.ExtensionName, prop.Property), val)
 			}

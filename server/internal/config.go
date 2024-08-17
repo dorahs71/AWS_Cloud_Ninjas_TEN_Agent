@@ -18,11 +18,16 @@ const (
 	extensionNameOpenaiChatgpt = "openai_chatgpt"
 	extensionNamePollyTTS      = "polly_tts"
 	extensionNameQwenLLM       = "qwen_llm"
+	extensionNameSageMakerTTS  = "sagemaker_tts"
 	extensionNameTranscribeAsr = "transcribe_asr"
 
 	// Language
-	languageChinese = "zh-CN"
-	languageEnglish = "en-US"
+	languageChinese  = "zh-CN"
+	languageEnglish  = "en-US"
+	languageJapenese = "ja-JP"
+	languageFrench   = "fr-FR"
+	languageKorean   = "ko-KR"
+
 	// Default graph name
 	graphNameDefault = "va.openai.azure"
 	// Property json
@@ -45,12 +50,14 @@ var (
 		"AWS_ACCESS_KEY_ID": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "access_key"},
 			{ExtensionName: extensionNamePollyTTS, Property: "access_key"},
+			{ExtensionName: extensionNameSageMakerTTS, Property: "access_key"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "access_key"},
 		},
 		"AWS_SECRET_ACCESS_KEY": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "secret_key"},
 			{ExtensionName: extensionNamePollyTTS, Property: "secret_key"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "secret_key"},
+			{ExtensionName: extensionNameSageMakerTTS, Property: "secret_key"},
 		},
 		"AWS_BEDROCK_MODEL": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "model"},
@@ -59,6 +66,7 @@ var (
 			{ExtensionName: extensionNameBedrockLLM, Property: "region"},
 			{ExtensionName: extensionNamePollyTTS, Property: "region"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "region"},
+			{ExtensionName: extensionNameSageMakerTTS, Property: "region"},
 		},
 		"AZURE_STT_KEY": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "agora_asr_vendor_key"},
@@ -108,6 +116,7 @@ var (
 		"AgoraAsrLanguage": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "agora_asr_language"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "lang_code"},
+			{ExtensionName: extensionNameBedrockLLM, Property: "input_language"},
 		},
 		"ChannelName": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "channel"},
@@ -117,6 +126,13 @@ var (
 		},
 		"Token": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "token"},
+		},
+		"Mode": {
+			{ExtensionName: extensionNameBedrockLLM, Property: "mode"},
+		},
+		"OutputLanguage": {
+			{ExtensionName: extensionNameBedrockLLM, Property: "output_language"},
+			{ExtensionName: extensionNameSageMakerTTS, Property: "output_language"},
 		},
 		"VoiceType": {
 			{ExtensionName: extensionNameAzureTTS, Property: "azure_synthesis_voice_name"},
@@ -153,6 +169,48 @@ var (
 			extensionNamePollyTTS: {
 				voiceTypeMale:   "Matthew",
 				voiceTypeFemale: "Ruth",
+			},
+		},
+		languageJapenese: {
+			extensionNameAzureTTS: {
+				voiceTypeMale:   "ja-JP-KeitaNeural",
+				voiceTypeFemale: "ja-JP-NanamiNeural",
+			},
+			extensionNameElevenlabsTTS: {
+				voiceTypeMale:   "pNInz6obpgDQGcFmaJgB", // Adam
+				voiceTypeFemale: "Xb7hH8MSUJpSbSDYk0k2", // Alice
+			},
+			extensionNamePollyTTS: {
+				voiceTypeMale:   "Takumi",
+				voiceTypeFemale: "Kazuha",
+			},
+		},
+		languageFrench: {
+			extensionNameAzureTTS: {
+				voiceTypeMale:   "fr-FR-HenriNeural",
+				voiceTypeFemale: "fr-FR-DeniseNeural",
+			},
+			extensionNameElevenlabsTTS: {
+				voiceTypeMale:   "pNInz6obpgDQGcFmaJgB", // Adam
+				voiceTypeFemale: "EXAVITQu4vr4xnSDxMaL", // Sarah
+			},
+			extensionNamePollyTTS: {
+				voiceTypeMale:   "Remi",
+				voiceTypeFemale: "Lea",
+			},
+		},
+		languageKorean: {
+			extensionNameAzureTTS: {
+				voiceTypeMale:   "ko-KR-SunHiNeural",
+				voiceTypeFemale: "ko-KR-InJoonNeural",
+			},
+			extensionNameElevenlabsTTS: {
+				voiceTypeMale:   "pNInz6obpgDQGcFmaJgB", // Adam
+				voiceTypeFemale: "Xb7hH8MSUJpSbSDYk0k2", // Alice
+			},
+			extensionNamePollyTTS: {
+				voiceTypeMale:   "Seoyeon",
+				voiceTypeFemale: "Seoyeon",
 			},
 		},
 	}

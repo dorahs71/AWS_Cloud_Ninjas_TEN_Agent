@@ -32,7 +32,10 @@ PROPERTY_TOP_P = "top_p"  # Optional
 PROPERTY_MAX_TOKENS = "max_tokens"  # Optional
 PROPERTY_GREETING = "greeting"  # Optional
 PROPERTY_MAX_MEMORY_LENGTH = "max_memory_length"  # Optional
-
+PROPERTY_MODE = "mode"  # Optional
+PROPERTY_INPUT_LANGUAGE = "input_language"  # Optional
+PROPERTY_OUTPUT_LANGUAGE = "output_language"  # Optional
+PROPERTY_USER_TEMPLATE = "user_template"  # Optional
 
 def get_current_time():
     # Get the current time
@@ -75,9 +78,9 @@ class BedrockLLMExtension(Extension):
         # Prepare configuration
         bedrock_llm_config = BedrockLLMConfig.default_config()
 
-        for optional_str_param in [
-            PROPERTY_REGION, PROPERTY_ACCESS_KEY, PROPERTY_SECRET_KEY,
-            PROPERTY_MODEL, PROPERTY_PROMPT]:
+        for optional_str_param in [PROPERTY_REGION, PROPERTY_ACCESS_KEY, PROPERTY_SECRET_KEY,
+            PROPERTY_MODEL, PROPERTY_PROMPT, PROPERTY_MODE, PROPERTY_INPUT_LANGUAGE,
+            PROPERTY_OUTPUT_LANGUAGE, PROPERTY_USER_TEMPLATE]:
             try:
                 value = rte.get_property_string(optional_str_param).strip()
                 if value:
@@ -118,6 +121,8 @@ class BedrockLLMExtension(Extension):
                 f"GetProperty optional {PROPERTY_MAX_MEMORY_LENGTH} failed, err: {err}."
             )
 
+        bedrock_llm_config.validate()
+
         # Create bedrockLLM instance
         try:
             self.bedrock_llm = BedrockLLM(bedrock_llm_config)
@@ -155,10 +160,13 @@ class BedrockLLMExtension(Extension):
         cmd_name = cmd.get_name()
 
         if cmd_name == CMD_IN_FLUSH:
-            self.outdate_ts = get_current_time()
-            cmd_out = Cmd.create(CMD_OUT_FLUSH)
-            rte.send_cmd(cmd_out, None)
-            logger.info(f"BedrockLLMExtension on_cmd sent flush")
+            if self.bedrock_llm.config.mode != 'translate':
+                self.outdate_ts = get_current_time()
+                cmd_out = Cmd.create(CMD_OUT_FLUSH)
+                rte.send_cmd(cmd_out, None)
+                logger.info(f"BedrockLLMExtension on_cmd sent flush")
+            else:
+                logger.info(f"BedrockLLMExtension on_cmd ignore flush in '{self.bedrock_llm.config.mode}' mode.")
         else:
             logger.info(f"BedrockLLMExtension on_cmd unknown cmd: {cmd_name}")
             cmd_result = CmdResult.create(StatusCode.ERROR)
@@ -204,6 +212,25 @@ class BedrockLLMExtension(Extension):
                 f"OnData GetProperty {DATA_IN_TEXT_DATA_PROPERTY_TEXT} failed, err: {err}"
             )
             return
+
+        if self.bedrock_llm.config.user_template:
+            if self.bedrock_llm.config.mode == 'translate':
+                _format = {
+                    "input_language": self.bedrock_llm.config.input_language,
+                    "output_language": self.bedrock_llm.config.output_language,
+                    "input_text": input_text,
+                }
+            elif self.bedrock_llm.config.mode == 'chat':
+                _format = {
+                    "input_language": self.bedrock_llm.config.input_language,
+                    "input_text": input_text,
+                }
+            try:
+                logger.info(f"Applying [{self.bedrock_llm.config.mode}] user template.")
+                input_text = self.bedrock_llm.config.user_template.format(**_format)
+            except Exception as err:
+                logger.exception(f"Apply [{self.bedrock_llm.config.mode}] user template failed, err: {err}. User template disabled.")
+                self.bedrock_llm.config.user_template = None
 
         # Prepare memory. A conversation must alternate between user and assistant roles
         while len(self.memory):

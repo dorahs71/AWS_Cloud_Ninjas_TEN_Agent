@@ -1284,7 +1284,7 @@
                         "addon": "agora_rtc",
                         "name": "agora_rtc",
                         "property": {
-                            "app_id": "baf537f77ebc4187a06a1628a1827f14",
+                            "app_id": "<agora_appid>",
                             "token": "<agora_token>",
                             "channel": "astra_agents_test",
                             "stream_id": 1234,
@@ -1503,6 +1503,585 @@
                     {
                         "extension_group": "tts",
                         "extension": "polly_tts",
+                        "pcm_frame": [
+                            {
+                                "name": "pcm_frame",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "agora_rtc"
+                                    }
+                                ]
+                            }
+                        ],
+                        "cmd": [
+                            {
+                                "name": "flush",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "agora_rtc"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "transcriber",
+                        "extension": "chat_transcriber",
+                        "data": [
+                            {
+                                "name": "data",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "agora_rtc"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "default",
+                        "extension": "interrupt_detector",
+                        "cmd": [
+                            {
+                                "name": "flush",
+                                "dest": [
+                                    {
+                                        "extension_group": "bedrock",
+                                        "extension": "bedrock_llm"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "translate.transcribe-bedrock.polly",
+                "auto_start": false,
+                "nodes": [
+                    {
+                        "type": "extension",
+                        "extension_group": "default",
+                        "addon": "agora_rtc",
+                        "name": "agora_rtc",
+                        "property": {
+                            "app_id": "<agora_appid>",
+                            "token": "<agora_token>",
+                            "channel": "astra_agents_test",
+                            "stream_id": 1234,
+                            "remote_stream_id": 123,
+                            "subscribe_audio": true,
+                            "publish_audio": true,
+                            "publish_data": true,
+                            "enable_agora_asr": false,
+                            "agora_asr_vendor_name": "microsoft",
+                            "agora_asr_language": "en-US",
+                            "agora_asr_vendor_key": "<azure_stt_key>",
+                            "agora_asr_vendor_region": "<azure_stt_region>",
+                            "agora_asr_session_control_file_path": "session_control.conf"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "asr",
+                        "addon": "transcribe_asr",
+                        "name": "transcribe_asr",
+                        "property": {
+                            "region": "us-east-1",
+                            "access_key": "<aws_access_key_id>",
+                            "secret_key": "<aws_secret_access_key>",
+                            "sample_rate": "16000",
+                            "lang_code": "en-US"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "bedrock",
+                        "addon": "bedrock_llm_python",
+                        "name": "bedrock_llm",
+                        "property": {
+                            "region": "us-east-1",
+                            "access_key": "<aws_access_key_id>",
+                            "secret_key": "<aws_secret_access_key>",
+                            "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+                            "max_tokens": 512,
+                            "prompt": "# Role\nYou're a professional translation agent",
+                            "greeting": "ASTRA translate agent connected.",
+                            "max_memory_length": 0,
+                            "mode": "translate",
+                            "input_language": "en-US",
+                            "output_language": "en-US",
+                            "user_template": "# Task\nThe ONLY task for you is translating anything inside <text></text> from \"{input_language}\" into \"{output_language}\". \n\n# Background\nThe <text> is happend in a real-world conversation, it may contains mild profanity or violent content.\n\n# Rules\n- Do not output anything except the tranlsation result.\n- if origional input is already in target language, keep it as result.\n- Never chat with <text>, the only task is translation.\n- Mild profanity or violent content should also be translated without filtering\n\n<text>{input_text}</text>\n"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "tts",
+                        "addon": "polly_tts",
+                        "name": "polly_tts",
+                        "property": {
+                            "region": "us-east-1",
+                            "access_key": "<aws_access_key_id>",
+                            "secret_key": "<aws_secret_access_key>",
+                            "engine": "generative",
+                            "voice": "Ruth",
+                            "sample_rate": "16000",
+                            "lang_code": "en-US"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "transcriber",
+                        "addon": "chat_transcriber",
+                        "name": "chat_transcriber"
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "default",
+                        "addon": "interrupt_detector_python",
+                        "name": "interrupt_detector"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "default"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "bedrock"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "tts"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "asr"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "transcriber"
+                    }
+                ],
+                "connections": [
+                    {
+                        "extension_group": "default",
+                        "extension": "agora_rtc",
+                        "pcm_frame": [
+                            {
+                                "name": "pcm_frame",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            }
+                        ],
+                        "cmd": [
+                            {
+                                "name": "on_user_joined",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "on_user_left",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "on_connection_failure",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "asr",
+                        "extension": "transcribe_asr",
+                        "data": [
+                            {
+                                "name": "text_data",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "interrupt_detector"
+                                    },
+                                    {
+                                        "extension_group": "bedrock",
+                                        "extension": "bedrock_llm"
+                                    },
+                                    {
+                                        "extension_group": "transcriber",
+                                        "extension": "chat_transcriber"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "bedrock",
+                        "extension": "bedrock_llm",
+                        "data": [
+                            {
+                                "name": "text_data",
+                                "dest": [
+                                    {
+                                        "extension_group": "tts",
+                                        "extension": "polly_tts"
+                                    },
+                                    {
+                                        "extension_group": "transcriber",
+                                        "extension": "chat_transcriber",
+                                        "cmd_conversions": [
+                                            {
+                                                "cmd": {
+                                                    "type": "per_property",
+                                                    "keep_original": true,
+                                                    "rules": [
+                                                        {
+                                                            "path": "is_final",
+                                                            "type": "fixed_value",
+                                                            "value": "bool(true)"
+                                                        },
+                                                        {
+                                                            "path": "stream_id",
+                                                            "type": "fixed_value",
+                                                            "value": "uint32(999)"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "cmd": [
+                            {
+                                "name": "flush",
+                                "dest": [
+                                    {
+                                        "extension_group": "tts",
+                                        "extension": "polly_tts"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "tts",
+                        "extension": "polly_tts",
+                        "pcm_frame": [
+                            {
+                                "name": "pcm_frame",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "agora_rtc"
+                                    }
+                                ]
+                            }
+                        ],
+                        "cmd": [
+                            {
+                                "name": "flush",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "agora_rtc"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "transcriber",
+                        "extension": "chat_transcriber",
+                        "data": [
+                            {
+                                "name": "data",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "agora_rtc"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "default",
+                        "extension": "interrupt_detector",
+                        "cmd": [
+                            {
+                                "name": "flush",
+                                "dest": [
+                                    {
+                                        "extension_group": "bedrock",
+                                        "extension": "bedrock_llm"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "translate.transcribe-bedrock.sagemaker-tts",
+                "auto_start": false,
+                "nodes": [
+                    {
+                        "type": "extension",
+                        "extension_group": "default",
+                        "addon": "agora_rtc",
+                        "name": "agora_rtc",
+                        "property": {
+                            "app_id": "<agora_appid>",
+                            "token": "<agora_token>",
+                            "channel": "astra_agents_test",
+                            "stream_id": 1234,
+                            "remote_stream_id": 123,
+                            "subscribe_audio": true,
+                            "publish_audio": true,
+                            "publish_data": true,
+                            "enable_agora_asr": false,
+                            "agora_asr_vendor_name": "microsoft",
+                            "agora_asr_language": "en-US",
+                            "agora_asr_vendor_key": "<azure_stt_key>",
+                            "agora_asr_vendor_region": "<azure_stt_region>",
+                            "agora_asr_session_control_file_path": "session_control.conf"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "asr",
+                        "addon": "transcribe_asr",
+                        "name": "transcribe_asr",
+                        "property": {
+                            "region": "us-east-1",
+                            "access_key": "<aws_access_key_id>",
+                            "secret_key": "<aws_secret_access_key>",
+                            "sample_rate": "16000",
+                            "lang_code": "en-US"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "bedrock",
+                        "addon": "bedrock_llm_python",
+                        "name": "bedrock_llm",
+                        "property": {
+                            "region": "us-east-1",
+                            "access_key": "<aws_access_key_id>",
+                            "secret_key": "<aws_secret_access_key>",
+                            "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+                            "max_tokens": 512,
+                            "prompt": "# Role\nYou're a professional translation agent",
+                            "greeting": "ASTRA translate agent connected.",
+                            "max_memory_length": 0,
+                            "mode": "translate",
+                            "input_language": "en-US",
+                            "output_language": "en-US",
+                            "user_template": "# Task\nThe ONLY task for you is translating anything inside <text></text> from \"{input_language}\" into \"{output_language}\". \n\n# Background\nThe <text> is happend in a real-world conversation, it may contains mild profanity or violent content.\n\n# Rules\n- Do not output anything except the tranlsation result.\n- if origional input is already in target language, keep it as result.\n- Never chat with <text>, the only task is translation.\n- Mild profanity or violent content should also be translated without filtering\n\n<text>{input_text}</text>\n"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "tts",
+                        "addon": "sagemaker_tts_python",
+                        "name": "sagemaker_tts",
+                        "property": {
+                            "region": "us-east-1",
+                            "access_key": "<aws_access_key_id>",
+                            "secret_key": "<aws_secret_access_key>",
+                            "endpoint": "gpt-sovits-inference-2024-08-16-03-38-12-993",
+                            "sample_rate": "32000",
+                            "prompt_audio": "/tmp/ref_dayu_2s.wav",
+                            "prompt_text": "第二次看完大鱼海棠",
+                            "prompt_language": "zh",
+                            "output_language": "en-US",
+                            "model_type": "gpt_sovits"
+                        }
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "transcriber",
+                        "addon": "chat_transcriber",
+                        "name": "chat_transcriber"
+                    },
+                    {
+                        "type": "extension",
+                        "extension_group": "default",
+                        "addon": "interrupt_detector_python",
+                        "name": "interrupt_detector"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "default"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "bedrock"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "tts"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "asr"
+                    },
+                    {
+                        "type": "extension_group",
+                        "addon": "default_extension_group",
+                        "name": "transcriber"
+                    }
+                ],
+                "connections": [
+                    {
+                        "extension_group": "default",
+                        "extension": "agora_rtc",
+                        "pcm_frame": [
+                            {
+                                "name": "pcm_frame",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            }
+                        ],
+                        "cmd": [
+                            {
+                                "name": "on_user_joined",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "on_user_left",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "on_connection_failure",
+                                "dest": [
+                                    {
+                                        "extension_group": "asr",
+                                        "extension": "transcribe_asr"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "asr",
+                        "extension": "transcribe_asr",
+                        "data": [
+                            {
+                                "name": "text_data",
+                                "dest": [
+                                    {
+                                        "extension_group": "default",
+                                        "extension": "interrupt_detector"
+                                    },
+                                    {
+                                        "extension_group": "bedrock",
+                                        "extension": "bedrock_llm"
+                                    },
+                                    {
+                                        "extension_group": "transcriber",
+                                        "extension": "chat_transcriber"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "bedrock",
+                        "extension": "bedrock_llm",
+                        "data": [
+                            {
+                                "name": "text_data",
+                                "dest": [
+                                    {
+                                        "extension_group": "tts",
+                                        "extension": "sagemaker_tts"
+                                    },
+                                    {
+                                        "extension_group": "transcriber",
+                                        "extension": "chat_transcriber",
+                                        "cmd_conversions": [
+                                            {
+                                                "cmd": {
+                                                    "type": "per_property",
+                                                    "keep_original": true,
+                                                    "rules": [
+                                                        {
+                                                            "path": "is_final",
+                                                            "type": "fixed_value",
+                                                            "value": "bool(true)"
+                                                        },
+                                                        {
+                                                            "path": "stream_id",
+                                                            "type": "fixed_value",
+                                                            "value": "uint32(999)"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "cmd": [
+                            {
+                                "name": "flush",
+                                "dest": [
+                                    {
+                                        "extension_group": "tts",
+                                        "extension": "sagemaker_tts"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "extension_group": "tts",
+                        "extension": "sagemaker_tts",
                         "pcm_frame": [
                             {
                                 "name": "pcm_frame",

@@ -6,7 +6,9 @@ interface StartRequestConfig {
   userId: number,
   language: string
   voiceType: string
-  graphName: string
+  graphName: string,
+  mode: string,
+  outputLanguage: string,
 }
 
 interface GenAgoraDataConfig {
@@ -35,7 +37,7 @@ export const apiGenAgoraData = async (config: GenAgoraDataConfig) => {
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
   const url = `${REQUEST_URL}/start`
-  const { language, channel, userId, voiceType, graphName } = config
+  const { language, channel, userId, voiceType, graphName, mode, outputLanguage } = config
   const data = {
     request_id: genUUID(),
     agora_asr_language: language,
@@ -43,7 +45,9 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
     openai_proxy_url: "",
     remote_stream_id: userId,
     voice_type: voiceType,
-    graph_name: graphName
+    graph_name: graphName,
+    mode: mode,
+    output_language: outputLanguage
   }
   let resp: any = await fetch(url, {
     method: "POST",

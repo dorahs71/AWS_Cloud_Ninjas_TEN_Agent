@@ -1,6 +1,4 @@
-import io
 import json
-import logging
 import boto3
 from typing import Union
 from botocore.exceptions import ClientError
@@ -13,21 +11,34 @@ ENGINE_GENERATIVE = 'generative'
 ENGINE_LONG_FORM = 'long-form'
 
 VOICE_ENGINE_MAP = {
-    "Zhiyu": [ENGINE_STANDARD, ENGINE_NEURAL],
+    "Zhiyu": [ENGINE_NEURAL, ENGINE_STANDARD],
     "Matthew": [ENGINE_GENERATIVE, ENGINE_NEURAL],
-    "Ruth": [ENGINE_GENERATIVE, ENGINE_NEURAL, ENGINE_LONG_FORM]
+    "Ruth": [ENGINE_GENERATIVE, ENGINE_NEURAL, ENGINE_LONG_FORM],
+    "Takumi": [ENGINE_NEURAL, ENGINE_STANDARD],
+    "Kazuha": [ENGINE_NEURAL],
+    "Remi": [ENGINE_NEURAL, ENGINE_STANDARD],
+    "Lea": [ENGINE_NEURAL, ENGINE_STANDARD],
+    "Seoyeon": [ENGINE_NEURAL, ENGINE_STANDARD]
 }
 
 VOICE_LANG_MAP = {
     "Zhiyu": ['cmn-CN'],
     "Matthew": ['en-US'],
-    "Ruth": ['en-US']
+    "Ruth": ['en-US'],
+    "Takumi": ['ja-JP'],
+    "Kazuha": ['ja-JP'],
+    "Remi": ['fr-FR'],
+    "Lea": ['fr-FR'],
+    "Seoyeon": ['ko-KR']
 }
 
 LANGCODE_MAP = {
     'cmn-CN': 'cmn-CN',
     'zh-CN': 'cmn-CN',
-    'en-US': 'en-US'
+    'en-US': 'en-US',
+    'ja-JP': 'ja-JP',
+    'fr-FR': 'fr-FR',
+    'ko-KR': 'ko-KR'
 }
 
 # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/polly/client/synthesize_speech.html

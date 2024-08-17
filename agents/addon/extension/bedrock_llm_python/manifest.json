@@ -32,6 +32,18 @@
       },
       "max_memory_length": {
         "type": "int64"
+      },
+      "mode": {
+        "type": "string"
+      },
+      "user_template": {
+        "type": "string"
+      },
+      "input_language": {
+        "type": "string"
+      },
+      "output_language": {
+        "type": "string"
       }
     },
     "data_in": [

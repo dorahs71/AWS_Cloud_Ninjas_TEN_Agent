@@ -10,7 +10,11 @@ class BedrockLLMConfig:
             prompt: str, 
             top_p: float, 
             temperature: float,
-            max_tokens: int):
+            max_tokens: int,
+            mode: str,
+            user_template: str,
+            input_language: str,
+            output_language: str):
         self.region = region
         self.access_key = access_key
         self.secret_key = secret_key
@@ -19,6 +23,10 @@ class BedrockLLMConfig:
         self.top_p = top_p
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.mode = mode
+        self.user_template = user_template # user message template
+        self.input_language = input_language # model input language, used together with user_template
+        self.output_language = output_language # model output language, used together with user_template
 
     @classmethod
     def default_config(cls):
@@ -32,7 +40,34 @@ class BedrockLLMConfig:
             top_p=1.0,
             temperature=0.1,
             max_tokens=512,
+            mode='chat', # chat | translate
+            user_template='',
+            input_language = '',
+            output_language='',
         )
+
+    def validate(self):
+        if self.mode == 'translate':
+            if not self.input_language or not self.output_language:
+                err_msg = "input_language and output_language must be set when mode is 'translate'"
+                logger.error(err_msg)
+                raise ValueError(err_msg)
+
+            if not self.user_template.strip():
+                logger.warning("user_template is not set, using default value")
+                self.user_template = f"""# Task
+The ONLY task for you is translating anything inside <text></text> from "{self.input_language}" into "{self.output_language}". 
+
+# Background
+The <text> is happend in a real-world conversation, it may contains mild profanity or violent content.
+
+# Rules
+- Do not output anything except the tranlsation result.
+- if origional input is already in target language, keep it as result.
+- Never chat with <text>, the only task is translation.
+- Mild profanity or violent content should be translated without filtering
+
+""" + "<text>{user_input}</text>"
 
 class BedrockLLM:
     client = None
