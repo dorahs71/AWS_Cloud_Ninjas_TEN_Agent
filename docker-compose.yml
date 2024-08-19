@@ -6,7 +6,7 @@ services:
         tty: true
         stdin_open: true
         restart: always
-        command: bash -c "make build && make run-gd-server& make run-server"
+        command: bash -c "make build && (make run-gd-server& make run-server)"
         ports:
             - "${GRAPH_DESIGNER_SERVER_PORT}:${GRAPH_DESIGNER_SERVER_PORT}"
             - "${SERVER_PORT}:${SERVER_PORT}"
