@@ -65,6 +65,12 @@ class PollyConfig:
         self.include_visemes = False
 
     def validate(self):
+        if self.region != 'us-east-1':
+            logger.info("region != us-east-1, removing not supported engines.")
+            VOICE_ENGINE_MAP['Matthew'].pop(0)
+            VOICE_ENGINE_MAP['Ruth'].pop(0)
+            VOICE_ENGINE_MAP['Ruth'].pop()
+
         if not self.voice in VOICE_ENGINE_MAP.keys():
             raise ValueError(f"Invalid voice '{self.voice}'. Must be one of {list(VOICE_ENGINE_MAP.keys())}.")
 
