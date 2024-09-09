@@ -19,7 +19,7 @@ PROPERTY_ACCESS_KEY = "access_key"  # Optional
 PROPERTY_SECRET_KEY = "secret_key"  # Optional
 PROPERTY_SAMPLE_RATE = 'sample_rate'# Optional
 PROPERTY_LANG_CODE = 'lang_code'    # Optional
-
+PROPERTY_PARTIAL_STABLE = 'enable_partial_results_stabilization' # Optional
 
 class TranscribeAsrExtension(Extension):
     def __init__(self, name: str):
@@ -42,6 +42,14 @@ class TranscribeAsrExtension(Extension):
                 PROPERTY_ACCESS_KEY, PROPERTY_SECRET_KEY]:
             try:
                 value = rte.get_property_string(optional_param).strip()
+                if value:
+                    transcribe_config.__setattr__(optional_param, value)
+            except Exception as err:
+                logger.debug(f"GetProperty optional {optional_param} failed, err: {err}. Using default value: {transcribe_config.__getattribute__(optional_param)}")
+
+        for optional_param in [PROPERTY_PARTIAL_STABLE]:
+            try:
+                value = rte.get_property_bool(optional_param).strip()
                 if value:
                     transcribe_config.__setattr__(optional_param, value)
             except Exception as err:

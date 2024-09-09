@@ -1,5 +1,3 @@
-from .bedrock_llm import BedrockLLM, BedrockLLMConfig
-from datetime import datetime
 from threading import Thread
 from rte import (
     Addon,
@@ -12,60 +10,11 @@ from rte import (
     CmdResult,
     MetadataInfo,
 )
+from .bedrock_llm import BedrockLLM, BedrockLLMConfig
+from .data_parser import *
 from .log import logger
-
-
-CMD_IN_FLUSH = "flush"
-CMD_OUT_FLUSH = "flush"
-DATA_IN_TEXT_DATA_PROPERTY_TEXT = "text"
-DATA_IN_TEXT_DATA_PROPERTY_IS_FINAL = "is_final"
-DATA_OUT_TEXT_DATA_PROPERTY_TEXT = "text"
-DATA_OUT_TEXT_DATA_PROPERTY_TEXT_END_OF_SEGMENT = "end_of_segment"
-
-PROPERTY_REGION = "region"  # Optional
-PROPERTY_ACCESS_KEY = "access_key"  # Optional
-PROPERTY_SECRET_KEY = "secret_key"  # Optional
-PROPERTY_MODEL = "model"  # Optional
-PROPERTY_PROMPT = "prompt"  # Optional
-PROPERTY_TEMPERATURE = "temperature"  # Optional
-PROPERTY_TOP_P = "top_p"  # Optional
-PROPERTY_MAX_TOKENS = "max_tokens"  # Optional
-PROPERTY_GREETING = "greeting"  # Optional
-PROPERTY_MAX_MEMORY_LENGTH = "max_memory_length"  # Optional
-PROPERTY_MODE = "mode"  # Optional
-PROPERTY_INPUT_LANGUAGE = "input_language"  # Optional
-PROPERTY_OUTPUT_LANGUAGE = "output_language"  # Optional
-PROPERTY_USER_TEMPLATE = "user_template"  # Optional
-
-def get_current_time():
-    # Get the current time
-    start_time = datetime.now()
-    # Get the number of microseconds since the Unix epoch
-    unix_microseconds = int(start_time.timestamp() * 1_000_000)
-    return unix_microseconds
-
-
-def is_punctuation(char):
-    if char in [",", "，", ".", "。", "?", "？", "!", "！"]:
-        return True
-    return False
-
-
-def parse_sentence(sentence, content):
-    remain = ""
-    found_punc = False
-
-    for char in content:
-        if not found_punc:
-            sentence += char
-        else:
-            remain += char
-
-        if not found_punc and is_punctuation(char):
-            found_punc = True
-
-    return sentence, remain, found_punc
-
+from .property import *
+from .utils import *
 
 class BedrockLLMExtension(Extension):
     memory = []
@@ -114,7 +63,7 @@ class BedrockLLMExtension(Extension):
 
         try:
             prop_max_memory_length = rte.get_property_int(PROPERTY_MAX_MEMORY_LENGTH)
-            if prop_max_memory_length > 0:
+            if prop_max_memory_length >= 0:
                 self.max_memory_length = int(prop_max_memory_length)
         except Exception as err:
             logger.debug(
@@ -131,6 +80,11 @@ class BedrockLLMExtension(Extension):
             )
         except Exception as err:
             logger.exception(f"newBedrockLLM failed, err: {err}")
+
+        if bedrock_llm_config.mode == 'translate':
+            self.input_data_parser = DataParserTranslate(user_template=bedrock_llm_config.user_template)
+        else:
+            self.input_data_parser = DataParserChat(user_template=bedrock_llm_config.user_template)
 
         # Send greeting if available
         if greeting:
@@ -184,53 +138,14 @@ class BedrockLLMExtension(Extension):
         current supported data:
           - name: text_data
             example:
-            {name: text_data, properties: {text: "hello"}
+            {name: text_data, properties: {text: "hello"}}
         """
         logger.info(f"BedrockLLMExtension on_data")
+        # logger.info(data.to_json())
 
-        # Assume 'data' is an object from which we can get properties
-        try:
-            is_final = data.get_property_bool(DATA_IN_TEXT_DATA_PROPERTY_IS_FINAL)
-            if not is_final:
-                logger.info("ignore non-final input")
-                return
-        except Exception as err:
-            logger.info(
-                f"OnData GetProperty {DATA_IN_TEXT_DATA_PROPERTY_IS_FINAL} failed, err: {err}"
-            )
+        input_text = self.input_data_parser.parse(data, self.bedrock_llm)
+        if not input_text:
             return
-
-        # Get input text
-        try:
-            input_text = data.get_property_string(DATA_IN_TEXT_DATA_PROPERTY_TEXT)
-            if not input_text:
-                logger.info("ignore empty text")
-                return
-            logger.info(f"OnData input text: [{input_text}]")
-        except Exception as err:
-            logger.info(
-                f"OnData GetProperty {DATA_IN_TEXT_DATA_PROPERTY_TEXT} failed, err: {err}"
-            )
-            return
-
-        if self.bedrock_llm.config.user_template:
-            if self.bedrock_llm.config.mode == 'translate':
-                _format = {
-                    "input_language": self.bedrock_llm.config.input_language,
-                    "output_language": self.bedrock_llm.config.output_language,
-                    "input_text": input_text,
-                }
-            elif self.bedrock_llm.config.mode == 'chat':
-                _format = {
-                    "input_language": self.bedrock_llm.config.input_language,
-                    "input_text": input_text,
-                }
-            try:
-                logger.info(f"Applying [{self.bedrock_llm.config.mode}] user template.")
-                input_text = self.bedrock_llm.config.user_template.format(**_format)
-            except Exception as err:
-                logger.exception(f"Apply [{self.bedrock_llm.config.mode}] user template failed, err: {err}. User template disabled.")
-                self.bedrock_llm.config.user_template = None
 
         # Prepare memory. A conversation must alternate between user and assistant roles
         while len(self.memory):
@@ -256,14 +171,15 @@ class BedrockLLMExtension(Extension):
         else:
             self.memory.append({"role": "user", "content": [{"text": input_text}]})
 
+        if self.bedrock_llm.config.mode == 'translate':
+            self.memory.append({"role": "assistant", "content": [{"text": "Sure, here's the translation result: <translation>"}]})
+
         def converse_stream_worker(start_time, input_text, memory):
             try:
-                logger.info(
-                    f"GetConverseStream for input text: [{input_text}] memory: {memory}"
-                )
+                logger.info(f"GetConverseStream for input text: [{input_text}] memory: {memory}")
 
                 # Get result from Bedrock
-                resp = self.bedrock_llm.get_converse_stream(memory)
+                resp = self.bedrock_llm.get_converse_resp(memory)
                 if resp is None or resp.get("stream") is None:
                     logger.info(
                         f"GetConverseStream for input text: [{input_text}] failed"
@@ -305,7 +221,7 @@ class BedrockLLMExtension(Extension):
                             sentence, content
                         )
                         if not sentence or not sentence_is_final:
-                            logger.info(f"sentence [{sentence}] is empty or not final")
+                            # logger.info(f"sentence [{sentence}] is empty or not final")
                             break
                         logger.info(
                             f"GetConverseStream recv for input text: [{input_text}] got sentence: [{sentence}]"

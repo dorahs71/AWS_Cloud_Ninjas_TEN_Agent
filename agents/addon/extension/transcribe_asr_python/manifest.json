@@ -60,6 +60,12 @@
                     "text": {
                         "type": "string"
                     },
+                    "text_stable": {
+                        "type": "string"
+                    },
+                    "text_non_stable": {
+                        "type": "string"
+                    },
                     "is_final": {
                         "type": "bool"
                     },

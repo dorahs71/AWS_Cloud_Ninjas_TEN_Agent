@@ -1594,7 +1594,8 @@
                             "access_key": "<aws_access_key_id>",
                             "secret_key": "<aws_secret_access_key>",
                             "sample_rate": "16000",
-                            "lang_code": "en-US"
+                            "lang_code": "en-US",
+                            "enable_partial_results_stabilization": true
                         }
                     },
                     {
@@ -1629,7 +1630,8 @@
                             "engine": "generative",
                             "voice": "Ruth",
                             "sample_rate": "16000",
-                            "lang_code": "en-US"
+                            "lang_code": "en-US",
+                            "enable_partial_results_stabilization": true
                         }
                     },
                     {
@@ -1637,12 +1639,6 @@
                         "extension_group": "transcriber",
                         "addon": "chat_transcriber",
                         "name": "chat_transcriber"
-                    },
-                    {
-                        "type": "extension",
-                        "extension_group": "default",
-                        "addon": "interrupt_detector_python",
-                        "name": "interrupt_detector"
                     },
                     {
                         "type": "extension_group",
@@ -1722,10 +1718,6 @@
                             {
                                 "name": "text_data",
                                 "dest": [
-                                    {
-                                        "extension_group": "default",
-                                        "extension": "interrupt_detector"
-                                    },
                                     {
                                         "extension_group": "bedrock",
                                         "extension": "bedrock_llm"
@@ -1824,21 +1816,6 @@
                                     {
                                         "extension_group": "default",
                                         "extension": "agora_rtc"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "extension_group": "default",
-                        "extension": "interrupt_detector",
-                        "cmd": [
-                            {
-                                "name": "flush",
-                                "dest": [
-                                    {
-                                        "extension_group": "bedrock",
-                                        "extension": "bedrock_llm"
                                     }
                                 ]
                             }
@@ -2215,12 +2192,6 @@
                         "name": "chat_transcriber"
                     },
                     {
-                        "type": "extension",
-                        "extension_group": "default",
-                        "addon": "interrupt_detector_python",
-                        "name": "interrupt_detector"
-                    },
-                    {
                         "type": "extension_group",
                         "addon": "default_extension_group",
                         "name": "default"
@@ -2298,10 +2269,6 @@
                             {
                                 "name": "text_data",
                                 "dest": [
-                                    {
-                                        "extension_group": "default",
-                                        "extension": "interrupt_detector"
-                                    },
                                     {
                                         "extension_group": "bedrock",
                                         "extension": "bedrock_llm"
@@ -2400,21 +2367,6 @@
                                     {
                                         "extension_group": "default",
                                         "extension": "agora_rtc"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "extension_group": "default",
-                        "extension": "interrupt_detector",
-                        "cmd": [
-                            {
-                                "name": "flush",
-                                "dest": [
-                                    {
-                                        "extension_group": "bedrock",
-                                        "extension": "bedrock_llm"
                                     }
                                 ]
                             }
