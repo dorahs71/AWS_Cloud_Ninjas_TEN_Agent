@@ -26,6 +26,9 @@
             },
             "lang_code": {
                 "type": "string"
+            },
+            "enable_partial_results_stabilization": {
+                "type": "bool"
             }
         },
         "pcm_frame_in": [

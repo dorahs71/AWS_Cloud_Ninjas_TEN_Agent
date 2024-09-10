@@ -49,9 +49,8 @@ class TranscribeAsrExtension(Extension):
 
         for optional_param in [PROPERTY_PARTIAL_STABLE]:
             try:
-                value = rte.get_property_bool(optional_param).strip()
-                if value:
-                    transcribe_config.__setattr__(optional_param, value)
+                value = rte.get_property_bool(optional_param)
+                transcribe_config.__setattr__(optional_param, value)
             except Exception as err:
                 logger.debug(f"GetProperty optional {optional_param} failed, err: {err}. Using default value: {transcribe_config.__getattribute__(optional_param)}")
 
