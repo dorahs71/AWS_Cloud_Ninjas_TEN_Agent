@@ -9,6 +9,7 @@ interface StartRequestConfig {
   graphName: string,
   mode: string,
   outputLanguage: string,
+  partialStabilization: boolean,
 }
 
 interface GenAgoraDataConfig {
@@ -37,7 +38,7 @@ export const apiGenAgoraData = async (config: GenAgoraDataConfig) => {
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
   const url = `${REQUEST_URL}/start`
-  const { language, channel, userId, voiceType, graphName, mode, outputLanguage } = config
+  const { language, channel, userId, voiceType, graphName, mode, outputLanguage, partialStabilization } = config
   const data = {
     request_id: genUUID(),
     agora_asr_language: language,
@@ -47,7 +48,8 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
     voice_type: voiceType,
     graph_name: graphName,
     mode: mode,
-    output_language: outputLanguage
+    output_language: outputLanguage,
+    enable_partial_results_stabilization: partialStabilization
   }
   let resp: any = await fetch(url, {
     method: "POST",

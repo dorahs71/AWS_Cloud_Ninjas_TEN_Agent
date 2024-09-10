@@ -8,7 +8,7 @@ import {
 } from "@/common"
 import Info from "./Info"
 import Status from "./status"
-import { Select, Button, message } from "antd"
+import { Select, Button, message, Checkbox } from "antd"
 import StyleSelect from "./themeSelect"
 import { useEffect, useState } from "react"
 import { LoadingOutlined } from "@ant-design/icons"
@@ -27,6 +27,7 @@ const Setting = () => {
   const [graphName, setGraphName] = useState(GRAPH_NAME_OPTIONS[0]['value'])
   const [lang, setLang] = useState("en-US")
   const [outputLanguage, setOutputLanguage] = useState(lang)
+  const [partialStabilization, setPartialStabilization] = useState(false)
   const [voice, setVoice] = useState("male")
   const [loading, setLoading] = useState(false)
 
@@ -66,7 +67,8 @@ const Setting = () => {
         voiceType: voice,
         graphName: graphName,
         mode: mode,
-        outputLanguage: outputLanguage
+        outputLanguage: outputLanguage,
+        partialStabilization: partialStabilization,
       })
       const { code, msg } = res || {}
       if (code != 0) {
@@ -145,6 +147,11 @@ const Setting = () => {
         <Select disabled={agentConnected} className={`${styles.select} dark`} value={outputLanguage} options={LANG_OPTIONS} onChange={v => {
           setOutputLanguage(v)
         }}></Select>
+
+        <div className={styles.title}>ASR PARTIAL STABILIZATION</div>
+        <Checkbox disabled={agentConnected} className={`${styles.checkbox} dark`} checked={partialStabilization} onChange={e => {
+          setPartialStabilization(e.target.checked)
+        }}>Enable(May reduce accuracy)</Checkbox>
       </> : null}
     </section>
     <section className={styles.selectWrapper}>

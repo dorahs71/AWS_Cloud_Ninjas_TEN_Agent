@@ -139,6 +139,9 @@ var (
 			{ExtensionName: extensionNameElevenlabsTTS, Property: "voice_id"},
 			{ExtensionName: extensionNamePollyTTS, Property: "voice"},
 		},
+		"PartialStabilization": {
+			{ExtensionName: extensionNameTranscribeAsr, Property: "enable_partial_results_stabilization"},
+		},
 	}
 
 	// Map the voice name to the voice type
