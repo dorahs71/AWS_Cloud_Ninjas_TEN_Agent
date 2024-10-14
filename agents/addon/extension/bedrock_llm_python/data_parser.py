@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from enum import Enum
 from typing import Union, List, Dict
 from rte import Data
 from .property import *
@@ -7,6 +8,13 @@ from .prompts import *
 from .utils import *
 from .log import logger
 from .property import PUNCUTATIONS
+
+
+class StrictLevel(Enum):
+    # LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
 
 class DataParserBase:
     def __init__(self, user_template: str='') -> None:
@@ -70,7 +78,7 @@ class DataParserChat(DataParserBase):
 
 
 class DataParserTranslate(DataParserBase):
-    def __init__(self, user_template: str = '', min_length: int = 8, min_new_words: int = 6) -> None:
+    def __init__(self, user_template: str = '', min_length: int = 6, min_new_words: int = 6) -> None:
         super().__init__(user_template)
         self.min_length = min_length # min text length before leveraging llm
         self.min_new_words = min_new_words # if last llm request failed, wait x more words.
@@ -159,7 +167,7 @@ class DataParserTranslate(DataParserBase):
 
     def should_process_with_llm(self, remained_text: str) -> bool:
         remained_text_len = count_word(self.language, remained_text)
-        logger.info(f"lanauge: {self.language}, content: {remained_text}, length: {remained_text_len}")
+        logger.info(f"lanauge: {self.language}, content: [{remained_text}], length: [{remained_text_len}]")
         return (remained_text_len >= self.min_length and
                 remained_text_len - self.last_failed_llm_length > self.min_new_words)
 
@@ -170,8 +178,9 @@ class DataParserTranslate(DataParserBase):
 
             logger.info(f"Punc LLM response [{output_text}]")
 
-            consumed_text, text_with_punc = self.consume_llm_output(remained_text, output_text, False)
+            consumed_text, text_with_punc = self.consume_llm_output(remained_text, output_text, strict_level=StrictLevel.MEDIUM)
             if not consumed_text:
+                logger.warning(f"Failed to add punctuation: new text [{output_text}], original text:[{remained_text}]. Dropping it.")
                 self.last_failed_llm_length = count_word(self.language, remained_text)
                 return None
 
@@ -202,16 +211,16 @@ class DataParserTranslate(DataParserBase):
 
         content = output_message.get('content', [{}])[0].get('text', '')
 
-        if remove_tailing_punctuations:
+        if remove_tail_punc:
             content = remove_tailing_punctuations(content)
 
         return content
 
-    def consume_llm_output(self, original_text: str, llm_output: str, strict_mode=False):
+    def consume_llm_output(self, original_text: str, llm_output: str, strict_level=StrictLevel.MEDIUM):
         if len(original_text) >= len(llm_output):
             return '', ''
 
-        if strict_mode:
+        if strict_level == StrictLevel.HIGH:
             """严格匹配模型返回结果（去除标点）"""
             original_without_punc = re.sub(rf"[{''.join(PUNCUTATIONS + [' '])}]", '', original_text)
             new_without_punc = re.sub(rf"[{''.join(PUNCUTATIONS + [' '])}]", '', llm_output)
@@ -222,25 +231,44 @@ class DataParserTranslate(DataParserBase):
                 return '', ''
 
             return original_text, llm_output
-        else:
-            idx = 0
-            punc_idx = -1
-            consumed_cnt = 0
 
-            for llm_idx, char in enumerate(llm_output):
-                if idx < len(original_text):
-                    if char == original_text[idx]:
-                        idx += 1
-                        consumed_cnt = idx
-                        punc_idx = llm_idx
-                    elif char in PUNCUTATIONS:
-                        punc_idx = llm_idx
-                    else:
-                        break
+        if strict_level == StrictLevel.MEDIUM:
+            # 步骤1: 记录标点位置并创建无标点的llm_output
+            punctuation_positions = []
+            llm_output_no_punct = []
+            for i, char in enumerate(llm_output):
+                if char in PUNCUTATIONS:
+                    punctuation_positions.append(i)
                 else:
-                    if char in PUNCUTATIONS:
-                        punc_idx = llm_idx
-                    else:
-                        break
+                    llm_output_no_punct.append(char)
 
-            return original_text[:consumed_cnt], llm_output[:punc_idx + 1]
+            llm_output_no_punct = ''.join(llm_output_no_punct)
+
+            # 步骤2: 找到最长匹配的子串
+            longest_match = 0
+            for i in range(min(len(original_text), len(llm_output_no_punct))):
+                if original_text[i] == llm_output_no_punct[i]:
+                    longest_match = i + 1
+                else:
+                    break
+
+            # 步骤3: 在原始llm_output中找到对应的位置
+            match_position = longest_match
+            for i, pos in enumerate(punctuation_positions):
+                if pos <= match_position + i:
+                    match_position += 1
+                else:
+                    break
+
+            # 步骤4: 找到最后一个标点的位置
+            last_punctuation = -1
+            for pos in punctuation_positions:
+                if pos < match_position:
+                    last_punctuation = pos
+                else:
+                    break
+
+            if last_punctuation == -1:
+                return '', ''
+
+            return original_text[:last_punctuation], llm_output[:last_punctuation + 1]

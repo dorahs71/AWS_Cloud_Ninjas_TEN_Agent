@@ -174,15 +174,15 @@ class BedrockLLMExtension(Extension):
         if self.bedrock_llm.config.mode == 'translate':
             self.memory.append({"role": "assistant", "content": [{"text": "Sure, here's the translation result: <translation>"}]})
 
-        def converse_stream_worker(start_time, input_text, memory):
+        def converse_stream_worker(start_time, input_text, memory, raw_text):
             try:
-                logger.info(f"GetConverseStream for input text: [{input_text}] memory: {memory}")
+                logger.info(f"GetConverseStream for input text: [{raw_text}], memory: [{memory}], full prompt: [{input_text}]")
 
                 # Get result from Bedrock
                 resp = self.bedrock_llm.get_converse_resp(memory)
                 if resp is None or resp.get("stream") is None:
                     logger.info(
-                        f"GetConverseStream for input text: [{input_text}] failed"
+                        f"GetConverseStream for input text: [{raw_text}] failed"
                     )
                     return
 
@@ -224,7 +224,7 @@ class BedrockLLMExtension(Extension):
                             # logger.info(f"sentence [{sentence}] is empty or not final")
                             break
                         logger.info(
-                            f"GetConverseStream recv for input text: [{input_text}] got sentence: [{sentence}]"
+                            f"GetConverseStream recv for input text: [{raw_text}] got sentence: [{sentence}]"
                         )
 
                         # send sentence
@@ -238,11 +238,11 @@ class BedrockLLMExtension(Extension):
                             )
                             rte.send_data(output_data)
                             logger.info(
-                                f"GetConverseStream recv for input text: [{input_text}] sent sentence [{sentence}]"
+                                f"GetConverseStream recv for input text: [{raw_text}] sent sentence [{sentence}]"
                             )
                         except Exception as err:
                             logger.info(
-                                f"GetConverseStream recv for input text: [{input_text}] send sentence [{sentence}] failed, err: {err}"
+                                f"GetConverseStream recv for input text: [{raw_text}] send sentence [{sentence}] failed, err: {err}"
                             )
                             break
 
@@ -250,7 +250,7 @@ class BedrockLLMExtension(Extension):
                         if not first_sentence_sent:
                             first_sentence_sent = True
                             logger.info(
-                                f"GetConverseStream recv for input text: [{input_text}] first sentence sent, first_sentence_latency {get_current_time() - start_time}ms"
+                                f"GetConverseStream recv for input text: [{raw_text}] first sentence sent, model's first_sentence_latency {get_current_time() - start_time}ms"
                             )
 
                 if len(full_content.strip()):
@@ -264,7 +264,7 @@ class BedrockLLMExtension(Extension):
                 else:
                     # can not put empty model response into memory
                     logger.error(
-                        f"GetConverseStream recv for input text: [{input_text}] failed: empty response [{full_content}]"
+                        f"GetConverseStream recv for input text: [{raw_text}] failed: empty response [{full_content}]"
                     )
                     return
 
@@ -279,7 +279,7 @@ class BedrockLLMExtension(Extension):
                     )
                     rte.send_data(output_data)
                     logger.info(
-                        f"GetConverseStream for input text: [{input_text}] end of segment with sentence [{sentence}] sent"
+                        f"GetConverseStream for input text: [{raw_text}] end of segment with sentence [{sentence}] sent"
                     )
                 except Exception as err:
                     logger.info(
@@ -294,7 +294,7 @@ class BedrockLLMExtension(Extension):
         # Start thread to request and read responses from OpenAI
         start_time = get_current_time()
         thread = Thread(
-            target=converse_stream_worker, args=(start_time, input_text, self.memory)
+            target=converse_stream_worker, args=(start_time, input_text, self.memory, data['text'])
         )
         thread.start()
         logger.info(f"BedrockLLMExtension on_data end")

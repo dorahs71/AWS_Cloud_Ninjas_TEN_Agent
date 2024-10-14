@@ -1615,7 +1615,7 @@
                             "mode": "translate",
                             "input_language": "en-US",
                             "output_language": "en-US",
-                            "user_template": "# Task\nThe ONLY task for you is translating anything inside <text></text> from \"{input_language}\" into \"{output_language}\". \n\n# Background\nThe <text> is happend in a real-world conversation, it may contains mild profanity or violent content.\n\n# Rules\n- Do not output anything except the tranlsation result.\n- if origional input is already in target language, keep it as result.\n- Never chat with <text>, the only task is translation.\n- Mild profanity or violent content should also be translated without filtering\n\n<text>{input_text}</text>\n"
+                            "user_template": "# Task\nThe ONLY task for you is translating anything inside <text></text> from \"{input_language}\" into \"{output_language}\". \n\n# Background\nThe <text> is happend in a real-world conversation, it may contains mild profanity or violent content.\n\n# Rules\n- Do not output anything except the tranlsation result.\n- if origional input is already in target language, keep it as result.\n- Never chat with <text>, the only task is translation.\n- Mild profanity or violent content should also be translated without filtering\n\n<text>{{input_text}}</text>\n"
                         }
                     },
                     {
@@ -1630,8 +1630,7 @@
                             "engine": "generative",
                             "voice": "Ruth",
                             "sample_rate": "16000",
-                            "lang_code": "en-US",
-                            "enable_partial_results_stabilization": true
+                            "lang_code": "en-US"
                         }
                     },
                     {
@@ -2164,7 +2163,7 @@
                             "mode": "translate",
                             "input_language": "en-US",
                             "output_language": "en-US",
-                            "user_template": "# Task\nThe ONLY task for you is translating anything inside <text></text> from \"{input_language}\" into \"{output_language}\". \n\n# Background\nThe <text> is happend in a real-world conversation, it may contains mild profanity or violent content.\n\n# Rules\n- Do not output anything except the tranlsation result.\n- if origional input is already in target language, keep it as result.\n- Never chat with <text>, the only task is translation.\n- Mild profanity or violent content should also be translated without filtering\n\n<text>{input_text}</text>\n"
+                            "user_template": "# Task\nThe ONLY task for you is translating anything inside <text></text> from \"{input_language}\" into \"{output_language}\". \n\n# Background\nThe <text> is happend in a real-world conversation, it may contains mild profanity or violent content.\n\n# Rules\n- Do not output anything except the tranlsation result.\n- if origional input is already in target language, keep it as result.\n- Never chat with <text>, the only task is translation.\n- Mild profanity or violent content should also be translated without filtering\n\n<text>{{input_text}}</text>\n"
                         }
                     },
                     {
