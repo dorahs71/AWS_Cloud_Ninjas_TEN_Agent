@@ -27,6 +27,7 @@ const (
 	languageJapenese = "ja-JP"
 	languageFrench   = "fr-FR"
 	languageKorean   = "ko-KR"
+	languageHindi    = "hi-IN"
 
 	// Default graph name
 	graphNameDefault = "va.openai.azure"
@@ -214,6 +215,12 @@ var (
 			extensionNamePollyTTS: {
 				voiceTypeMale:   "Seoyeon",
 				voiceTypeFemale: "Seoyeon",
+			},
+		},
+		languageHindi: {
+			extensionNamePollyTTS: {
+				voiceTypeMale:   "Kajal",
+				voiceTypeFemale: "Kajal",
 			},
 		},
 	}

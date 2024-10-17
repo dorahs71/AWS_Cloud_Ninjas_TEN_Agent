@@ -18,7 +18,8 @@ VOICE_ENGINE_MAP = {
     "Kazuha": [ENGINE_NEURAL],
     "Remi": [ENGINE_NEURAL, ENGINE_STANDARD],
     "Lea": [ENGINE_NEURAL, ENGINE_STANDARD],
-    "Seoyeon": [ENGINE_NEURAL, ENGINE_STANDARD]
+    "Seoyeon": [ENGINE_NEURAL, ENGINE_STANDARD],
+    "Kajal": [ENGINE_NEURAL]
 }
 
 VOICE_LANG_MAP = {
@@ -29,7 +30,8 @@ VOICE_LANG_MAP = {
     "Kazuha": ['ja-JP'],
     "Remi": ['fr-FR'],
     "Lea": ['fr-FR'],
-    "Seoyeon": ['ko-KR']
+    "Seoyeon": ['ko-KR'],
+    "Kajal": ['hi-IN']
 }
 
 LANGCODE_MAP = {
@@ -38,7 +40,8 @@ LANGCODE_MAP = {
     'en-US': 'en-US',
     'ja-JP': 'ja-JP',
     'fr-FR': 'fr-FR',
-    'ko-KR': 'ko-KR'
+    'ko-KR': 'ko-KR',
+    'hi-IN': 'hi-IN'
 }
 
 # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/polly/client/synthesize_speech.html

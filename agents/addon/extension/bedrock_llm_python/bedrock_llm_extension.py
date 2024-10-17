@@ -294,7 +294,7 @@ class BedrockLLMExtension(Extension):
         # Start thread to request and read responses from OpenAI
         start_time = get_current_time()
         thread = Thread(
-            target=converse_stream_worker, args=(start_time, input_text, self.memory, data['text'])
+            target=converse_stream_worker, args=(start_time, input_text, self.memory, data.get_property_string(DATA_IN_TEXT_DATA_PROPERTY_TEXT))
         )
         thread.start()
         logger.info(f"BedrockLLMExtension on_data end")

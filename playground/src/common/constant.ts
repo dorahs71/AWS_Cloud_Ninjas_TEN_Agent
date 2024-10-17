@@ -53,6 +53,10 @@ export const LANG_OPTIONS = [
   {
     label: "French",
     value: "fr-FR"
+  },
+  {
+    label: "Hindi",
+    value: "hi-IN"
   }
 ]
 export const VOICE_OPTIONS = [
