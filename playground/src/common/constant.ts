@@ -43,8 +43,12 @@ export const LANG_OPTIONS = [
     value: "en-US"
   },
   {
-    label: "Chinese",
+    label: "Chinese Simplified",
     value: "zh-CN"
+  },
+  {
+    label: "Chinese Traditional",
+    value: "zh-TW"
   },
   {
     label: "Japanese",

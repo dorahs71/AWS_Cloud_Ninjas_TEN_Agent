@@ -22,12 +22,13 @@ const (
 	extensionNameTranscribeAsr = "transcribe_asr"
 
 	// Language
-	languageChinese  = "zh-CN"
-	languageEnglish  = "en-US"
-	languageJapenese = "ja-JP"
-	languageFrench   = "fr-FR"
-	languageKorean   = "ko-KR"
-	languageHindi    = "hi-IN"
+	languageChinese            = "zh-CN"
+	languageChineseTraditional = "zh-TW"
+	languageEnglish            = "en-US"
+	languageJapenese           = "ja-JP"
+	languageFrench             = "fr-FR"
+	languageKorean             = "ko-KR"
+	languageHindi              = "hi-IN"
 
 	// Default graph name
 	graphNameDefault = "va.openai.azure"
@@ -143,6 +144,9 @@ var (
 		"PartialStabilization": {
 			{ExtensionName: extensionNameTranscribeAsr, Property: "enable_partial_results_stabilization"},
 		},
+		"Greeting": {
+			{ExtensionName: extensionNameBedrockLLM, Property: "greeting"},
+		},
 	}
 
 	// Map the voice name to the voice type
@@ -221,6 +225,12 @@ var (
 			extensionNamePollyTTS: {
 				voiceTypeMale:   "Kajal",
 				voiceTypeFemale: "Kajal",
+			},
+		},
+		languageChineseTraditional: {
+			extensionNamePollyTTS: {
+				voiceTypeMale:   "Hiujin",
+				voiceTypeFemale: "Hiujin",
 			},
 		},
 	}

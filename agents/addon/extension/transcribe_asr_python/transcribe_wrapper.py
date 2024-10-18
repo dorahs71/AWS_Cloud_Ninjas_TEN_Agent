@@ -35,7 +35,7 @@ class AsyncTranscribeWrapper():
         self.is_first_frame = True
 
         if config.access_key and config.secret_key:
-            logger.info(f"init trascribe client with access key: {config.access_key}")
+            logger.info(f"init trascribe client with access key: {config.access_key}, lang_code: {self.config.lang_code}")
             self.transcribe_client = TranscribeStreamingClient(
                 region=config.region,
                 credential_resolver=StaticCredentialResolver(
@@ -44,7 +44,7 @@ class AsyncTranscribeWrapper():
                 )
             )
         else:
-            logger.info(f"init trascribe client without access key, using default credentials provider chain.")
+            logger.info(f"init trascribe client without access key, using default credentials provider chain, lang_code: {self.config.lang_code}")
 
             self.transcribe_client = TranscribeStreamingClient(
                 region=config.region

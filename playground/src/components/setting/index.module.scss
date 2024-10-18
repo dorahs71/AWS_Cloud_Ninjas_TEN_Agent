@@ -101,4 +101,25 @@
   }
 
 
+  .textInput {
+    display: flex;
+    padding: 24px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+    border: 1px solid #272A2F;
+
+    .title {
+      color: var(--Grey-300, #EAECF0);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 150%;
+      letter-spacing: 0.449px;
+    }
+
+    .textarea {
+      background-color: #eee;
+    }
+  }
 }

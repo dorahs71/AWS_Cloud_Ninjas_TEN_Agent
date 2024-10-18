@@ -8,13 +8,12 @@ import {
 } from "@/common"
 import Info from "./Info"
 import Status from "./status"
-import { Select, Button, message, Checkbox } from "antd"
+import { Select, Button, message, Checkbox, Input } from "antd"
 import StyleSelect from "./themeSelect"
 import { useEffect, useState } from "react"
 import { LoadingOutlined } from "@ant-design/icons"
 import styles from "./index.module.scss"
-
-
+const { TextArea } = Input
 
 let intervalId: any
 
@@ -29,6 +28,7 @@ const Setting = () => {
   const [outputLanguage, setOutputLanguage] = useState(lang)
   const [partialStabilization, setPartialStabilization] = useState(false)
   const [voice, setVoice] = useState("male")
+  const [greeting, setGreeting] = useState("")
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -69,6 +69,7 @@ const Setting = () => {
         mode: mode,
         outputLanguage: outputLanguage,
         partialStabilization: partialStabilization,
+        greeting,
       })
       const { code, msg } = res || {}
       if (code != 0) {
@@ -159,6 +160,18 @@ const Setting = () => {
       <Select disabled={agentConnected} value={voice} className={`${styles.select} dark`} options={VOICE_OPTIONS} onChange={v => {
         setVoice(v)
       }}></Select>
+    </section>
+    <section className={styles.textInput}>
+      <div className={styles.title}>Greeting</div>
+      <TextArea
+        className={`${styles.textarea} dark`}
+        disabled={agentConnected}
+        value={greeting}
+        placeholder="Enter a greeting message"
+        onChange={e => {
+          setGreeting(e.target.value)
+        }}
+      ></TextArea>
     </section>
     {/* style */}
     <StyleSelect></StyleSelect>
