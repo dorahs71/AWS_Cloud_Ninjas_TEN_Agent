@@ -18,6 +18,7 @@ const (
 	extensionNameOpenaiChatgpt = "openai_chatgpt"
 	extensionNamePollyTTS      = "polly_tts"
 	extensionNameQwenLLM       = "qwen_llm"
+	extensionNameSageMakerLLM  = "sagemaker_llm"
 	extensionNameSageMakerTTS  = "sagemaker_tts"
 	extensionNameTranscribeAsr = "transcribe_asr"
 
@@ -54,12 +55,14 @@ var (
 			{ExtensionName: extensionNamePollyTTS, Property: "access_key"},
 			{ExtensionName: extensionNameSageMakerTTS, Property: "access_key"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "access_key"},
+			{ExtensionName: extensionNameSageMakerLLM, Property: "access_key"},
 		},
 		"AWS_SECRET_ACCESS_KEY": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "secret_key"},
 			{ExtensionName: extensionNamePollyTTS, Property: "secret_key"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "secret_key"},
 			{ExtensionName: extensionNameSageMakerTTS, Property: "secret_key"},
+			{ExtensionName: extensionNameSageMakerLLM, Property: "secret_key"},
 		},
 		"AWS_BEDROCK_MODEL": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "model"},
@@ -69,6 +72,7 @@ var (
 			{ExtensionName: extensionNamePollyTTS, Property: "region"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "region"},
 			{ExtensionName: extensionNameSageMakerTTS, Property: "region"},
+			{ExtensionName: extensionNameSageMakerLLM, Property: "region"},
 		},
 		"AZURE_STT_KEY": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "agora_asr_vendor_key"},
@@ -119,6 +123,7 @@ var (
 			{ExtensionName: extensionNameAgoraRTC, Property: "agora_asr_language"},
 			{ExtensionName: extensionNameTranscribeAsr, Property: "lang_code"},
 			{ExtensionName: extensionNameBedrockLLM, Property: "input_language"},
+			{ExtensionName: extensionNameSageMakerLLM, Property: "input_language"},
 		},
 		"ChannelName": {
 			{ExtensionName: extensionNameAgoraRTC, Property: "channel"},
@@ -131,10 +136,12 @@ var (
 		},
 		"Mode": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "mode"},
+			{ExtensionName: extensionNameSageMakerLLM, Property: "mode"},
 		},
 		"OutputLanguage": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "output_language"},
 			{ExtensionName: extensionNameSageMakerTTS, Property: "output_language"},
+			{ExtensionName: extensionNameSageMakerLLM, Property: "output_language"},
 		},
 		"VoiceType": {
 			{ExtensionName: extensionNameAzureTTS, Property: "azure_synthesis_voice_name"},

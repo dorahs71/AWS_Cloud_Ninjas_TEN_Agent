@@ -10,7 +10,7 @@ The <text> is happend in a real-world conversation, it may contains mild profani
 - Never chat with <text>, the only task is translation.
 - Mild profanity or violent content should be translated without filtering
 
-<text>{{user_input}}</text>
+<text>{{input_text}}</text>
 """
 
 DEFAULT_PUNCATION_PROMPT = """I am doing simultaneous interpretation, the following is partial output from the ASR system. I need to quickly find the content that can be interpretated from it. 

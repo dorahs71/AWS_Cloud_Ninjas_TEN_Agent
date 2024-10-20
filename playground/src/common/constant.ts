@@ -35,6 +35,14 @@ export const GRAPH_NAME_OPTIONS = [
   {
     label: "transcribe-bedrock-polly",
     value: "va.transcribe-bedrock.polly"
+  },
+  {
+    label: "transcribe-sagemaker_llm-polly",
+    value: "va.transcribe-sm_llm.polly"
+  },
+  {
+    label: "transcribe-sagemaker_llm-sagemaker_tts",
+    value: "va.transcribe-sm_llm.sm_tts"
   }
 ]
 export const LANG_OPTIONS = [
