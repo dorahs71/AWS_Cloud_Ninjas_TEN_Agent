@@ -7,7 +7,12 @@ from botocore.exceptions import ClientError
 from .log import logger
 
 MODEL_TYPE_GPT_SOVITS = 'gpt_sovits'
-MODEL_TYPE_COSY_VOICE = 'cosy_voice'
+MODEL_TYPE_XTTS = 'xtts'
+
+MODEL_TYPES = [
+    MODEL_TYPE_GPT_SOVITS,
+    MODEL_TYPE_XTTS,
+]
 
 LANGCODE_MAP = {
     MODEL_TYPE_GPT_SOVITS: {
@@ -17,14 +22,25 @@ LANGCODE_MAP = {
         'fr-FR': 'fr',
         'ko-KR': 'ko'
     },
-    MODEL_TYPE_COSY_VOICE: {
-
+    MODEL_TYPE_XTTS: {
+        # https://huggingface.co/coqui/XTTS-v2
+        # English (en), Spanish (es), French (fr), German (de), Italian (it), 
+        # Portuguese (pt), Polish (pl), Turkish (tr), Russian (ru), 
+        # Dutch (nl), Czech (cs), Arabic (ar), Chinese (zh-cn), 
+        # Japanese (ja), Hungarian (hu), Korean (ko) Hindi (hi).
+        'en': 'en',
+        'es': 'es',
+        'fr': 'fr',
+        'cn': 'zh-cn',
+        'zh-cn': 'zh-cn',
+        'ko': 'ko',
+        'ja': 'ja',
     }
 }
 
 LANGCODE_DEFUALT = {
     MODEL_TYPE_GPT_SOVITS: 'en',
-    MODEL_TYPE_COSY_VOICE: 'en'
+    MODEL_TYPE_XTTS: 'en'
 }
 
 class SageMakerTTSConfig:
@@ -39,7 +55,7 @@ class SageMakerTTSConfig:
             prompt_text: str,
             prompt_language: str,
             output_language: str,
-            model_type: str = MODEL_TYPE_GPT_SOVITS):
+            model_type: str):
         self.region = region
         self.access_key = access_key
         self.secret_key = secret_key
@@ -54,9 +70,9 @@ class SageMakerTTSConfig:
         self.model_type = model_type
 
     def validate(self):
-        if self.model_type != MODEL_TYPE_GPT_SOVITS:
-            logger.warning(f"Unsupported model type: {self.model_type}, fallback to '{MODEL_TYPE_GPT_SOVITS}'")
-            self.model_type = MODEL_TYPE_GPT_SOVITS
+        if self.model_type not in MODEL_TYPES:
+            logger.error(f"Unsupported model type: {self.model_type}, should be one of {MODEL_TYPES}.")
+            raise
 
         logger.info(f"receiving output_languge: {self.output_language}")
         if not self.output_language or not LANGCODE_MAP[self.model_type].get(self.output_language):
@@ -79,7 +95,7 @@ class SageMakerTTSConfig:
             prompt_text="",
             prompt_language="",
             output_language="",
-            model_type=MODEL_TYPE_GPT_SOVITS
+            model_type=None
         )
 
 
@@ -104,16 +120,8 @@ class SageMakerTTSWrapper:
             logger.info(f"SageMakerTTS initialized without access key, using default credentials provider chain.")
             self.client = boto3.client(service_name='sagemaker-runtime', region_name=config.region)
 
-
-    def synthesize(self, text, language):
-        """
-        Synthesizes speech or speech marks from text, using the specified voice.
-
-        :param text: The text to synthesize.
-        :return: The audio stream that contains the synthesized speech and a list
-                 of visemes that are associated with the speech audio.
-        """
-        try:
+    def get_request_payload(self, text, language):
+        if self.config.model_type == MODEL_TYPE_GPT_SOVITS:
             request = {
                 "refer_wav_path": self.config.prompt_audio,
                 "prompt_text": self.config.prompt_text,
@@ -124,7 +132,31 @@ class SageMakerTTSWrapper:
                 "output_s3uri": "",
                 "cut_punc":",.;?!、，。？！；：…"
             }
+        else:
+            request = {
+                "speaker_wav": self.config.prompt_audio,
+                "text": text,
+                "language_id": language,
 
+                # optional parameters
+                "temperature": 0.75,
+                "top_k": 50,
+                "top_p": 0.85,
+                "speed": 1,
+            }
+
+        return request
+
+    def synthesize(self, text, language):
+        """
+        Synthesizes speech or speech marks from text, using the specified voice.
+
+        :param text: The text to synthesize.
+        :return: The audio stream that contains the synthesized speech and a list
+                 of visemes that are associated with the speech audio.
+        """
+        try:
+            request = self.get_request_payload(text, language)
             audio_stream = self.invoke_streams_endpoint(request)
             # audio_stream = response["AudioStream"]
             logger.info("Got audio stream.")
