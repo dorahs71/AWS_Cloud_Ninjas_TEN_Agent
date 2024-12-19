@@ -28,13 +28,11 @@ LANGCODE_MAP = {
         # Portuguese (pt), Polish (pl), Turkish (tr), Russian (ru), 
         # Dutch (nl), Czech (cs), Arabic (ar), Chinese (zh-cn), 
         # Japanese (ja), Hungarian (hu), Korean (ko) Hindi (hi).
-        'en': 'en',
-        'es': 'es',
-        'fr': 'fr',
-        'cn': 'zh-cn',
-        'zh-cn': 'zh-cn',
-        'ko': 'ko',
-        'ja': 'ja',
+        'zh-CN': 'zh-cn',
+        'en-US': 'en',
+        'ja-JP': 'ja',
+        'fr-FR': 'fr',
+        'ko-KR': 'ko'
     }
 }
 
