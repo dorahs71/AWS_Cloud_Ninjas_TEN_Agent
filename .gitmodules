@@ -1,0 +1,8 @@
+[submodule "tts-on-sagemaker/GPT-SoVITS"]
+	path = tts-on-sagemaker/GPT-SoVITS
+	url = https://github.com/chen188/GPT-SoVITS
+	branch = binary_streams
+[submodule "tts-on-sagemaker/xTTS"]
+	path = tts-on-sagemaker/xTTS
+	url = https://github.com/Chen188/TTS
+	branch = sagemaker
