@@ -33,6 +33,10 @@ export const GRAPH_NAME_OPTIONS = [
     value: "va.transcribe-bedrock.sagemaker-tts"
   },
   {
+    label: "transcribe-bedrock-fishaudio",
+    value: "va.transcribe-bedrock.fish"
+  },
+  {
     label: "transcribe-bedrock-polly",
     value: "va.transcribe-bedrock.polly"
   },
