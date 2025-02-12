@@ -11,15 +11,19 @@ export const DEFAULT_OPTIONS: IOptions = {
 export const DESCRIPTION = "This is an AI voice assistant powered by ASTRA.ai framework, Agora, Amazon Bedrock, Amazon Transcribe and Amazon SageMaker."
 export const MODE_OPTIONS = [
   {
-    label: "Translate",
-    value: "translate"
-  },
-  {
     label: "Chat",
     value: "chat"
+  },
+  {
+    label: "Translate",
+    value: "translate"
   }
 ]
 export const GRAPH_NAME_OPTIONS = [
+  {
+    label: "transcribe-bedrock-polly",
+    value: "va.transcribe-bedrock.polly"
+  },
   {
     label: "translate-transcribe-bedrock-polly",
     value: "translate.transcribe-bedrock.polly"
@@ -35,10 +39,6 @@ export const GRAPH_NAME_OPTIONS = [
   {
     label: "transcribe-bedrock-fishaudio",
     value: "va.transcribe-bedrock.fish"
-  },
-  {
-    label: "transcribe-bedrock-polly",
-    value: "va.transcribe-bedrock.polly"
   },
   {
     label: "transcribe-sagemaker_llm-polly",
