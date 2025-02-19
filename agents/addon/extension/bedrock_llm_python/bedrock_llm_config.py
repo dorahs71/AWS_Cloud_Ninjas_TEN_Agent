@@ -1,5 +1,5 @@
 from .log import logger
-from .prompts import DEFAULT_TRANSLATE_USER_PROMPT
+from .prompts import DEFAULT_TRANSLATE_USER_PROMPT, DEFAULT_CHAT_SYSTEM_PROMPT
 
 class BedrockLLMConfig:
     def __init__(self, 
@@ -36,7 +36,7 @@ class BedrockLLMConfig:
             secret_key="",
             model="anthropic.claude-3-5-sonnet-20240620-v1:0", # Defaults to Claude 3.5, supported model list: https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
             # system prompt
-            prompt="You are a voice assistant who talks in a conversational way and can chat with me like my friends. I will speak to you and you will answer in the corrected and improved version of my text with the language I use. Don't talk like a robot, instead I would like you to talk like a real human with emotions. I will use your answer for text-to-speech, so don't return me any meaningless characters. I want you to be helpful, when I'm asking you for advice, give me precise, practical and useful advice instead of being vague. When giving me a list of options, express the options in a narrative way instead of bullet points.",
+            prompt=DEFAULT_CHAT_SYSTEM_PROMPT,
             top_p=1.0,
             temperature=0.1,
             max_tokens=512,

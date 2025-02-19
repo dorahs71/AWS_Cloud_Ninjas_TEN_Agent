@@ -10,17 +10,13 @@ interface MenuItem {
   active: boolean
 }
 
-const DEFAULT_MENU_LIST: MenuItem[] = [
-  {
-    text: "Settings",
-    active: true
-  }, {
-    text: "Chat",
-    active: false
-  }, {
-    text: "Agent",
-    active: false
-  }]
+const DEFAULT_MENU_LIST: MenuItem[] = [{
+  text: "Chat",
+  active: true
+}, {
+  text: "Agent",
+  active: false
+}]
 
 const Menu = (props: MenuProps) => {
   const { onChange } = props

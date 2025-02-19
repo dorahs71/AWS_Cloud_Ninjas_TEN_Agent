@@ -1,0 +1,85 @@
+.settingsDialog {
+    :global {
+        .ant-modal-content {
+            background: #181A1D !important;
+            border: 1px solid #272A2F !important;
+        }
+
+        .ant-modal-header {
+            background: #181A1D !important;
+            border-bottom: 1px solid #272A2F !important;
+
+            .ant-modal-title {
+                color: var(--Grey-300, #EAECF0) !important;
+            }
+        }
+
+        .ant-tabs-nav {
+            margin-bottom: 0 !important;
+        }
+
+        .ant-tabs-tab {
+            color: var(--Grey-300, #EAECF0) !important;
+
+            &:hover {
+                color: #fff !important;
+            }
+        }
+
+        .ant-tabs-tab-active {
+            .ant-tabs-tab-btn {
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+.settingGroup {
+    padding: 16px;
+    background: #181A1D;
+
+    .settingItem {
+        margin-bottom: 24px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--Grey-300, #EAECF0);
+            margin-bottom: 8px;
+        }
+
+        .select {
+            width: 100%;
+            background: #181A1D;
+            border-color: #272A2F;
+            color: var(--Grey-300, #EAECF0);
+        }
+
+        .checkbox {
+            color: var(--Grey-300, #EAECF0);
+        }
+
+        .textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            background: #181A1D;
+            border-color: #272A2F;
+            color: var(--Grey-300, #EAECF0);
+
+            &::placeholder {
+                color: #666D7A;
+            }
+        }
+    }
+}
+
+.emptyTab {
+    padding: 32px;
+    text-align: center;
+    color: var(--Grey-300, #EAECF0);
+}

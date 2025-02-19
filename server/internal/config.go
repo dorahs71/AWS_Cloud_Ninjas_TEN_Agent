@@ -154,6 +154,9 @@ var (
 		"Greeting": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "greeting"},
 		},
+		"SystemPrompt": {
+			{ExtensionName: extensionNameBedrockLLM, Property: "prompt"},
+		},
 	}
 
 	// Map the voice name to the voice type

@@ -1,14 +1,14 @@
 import { IOptions, ColorItem } from "@/types"
 
 export const REQUEST_URL = process.env.NEXT_PUBLIC_REQUEST_URL ?? ""
-export const GITHUB_URL = "https://github.com/rte-design/ASTRA.ai"
+export const GITHUB_URL = "https://github.com/Chen188/TEN-Agent"
 export const OPTIONS_KEY = "__options__"
 export const DEFAULT_OPTIONS: IOptions = {
   channel: "",
   userName: "",
   userId: 0
 }
-export const DESCRIPTION = "This is an AI voice assistant powered by ASTRA.ai framework, Agora, Amazon Bedrock, Amazon Transcribe and Amazon SageMaker."
+export const DESCRIPTION = "This is an AI voice assistant powered by TEN framework, Agora, Amazon Bedrock, Amazon Transcribe and Amazon SageMaker."
 export const MODE_OPTIONS = [
   {
     label: "Chat",
