@@ -11,6 +11,7 @@ const (
 	// Extension name
 	extensionNameAgoraRTC      = "agora_rtc"
 	extensionNameBedrockLLM    = "bedrock_llm"
+	extensionNameDify          = "dify"
 	extensionNameAzureTTS      = "azure_tts"
 	extensionNameCosyTTS       = "cosy_tts"
 	extensionNameElevenlabsTTS = "elevenlabs_tts"
@@ -153,6 +154,7 @@ var (
 		},
 		"Greeting": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "greeting"},
+			{ExtensionName: extensionNameDify, Property: "greeting"},
 		},
 		"SystemPrompt": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "prompt"},

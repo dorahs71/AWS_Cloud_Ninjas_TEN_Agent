@@ -21,32 +21,44 @@ export const MODE_OPTIONS = [
 ]
 export const GRAPH_NAME_OPTIONS = [
   {
+    label: "Dify Knowledge Base",
+    value: "va.transcribe-dify.polly",
+    desc: "[Chat Mode] Transcribe ASR -> Dify KB -> Polly TTS. Don't allow interrupt before completing prior request."
+  },
+  {
     label: "transcribe-bedrock-polly",
-    value: "va.transcribe-bedrock.polly"
+    value: "va.transcribe-bedrock.polly",
+    desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> Polly TTS"
   },
   {
     label: "translate-transcribe-bedrock-polly",
-    value: "translate.transcribe-bedrock.polly"
+    value: "translate.transcribe-bedrock.polly",
+    desc: "[Translation Mode] Transcribe ASR -> Bedrock LLM -> Polly TTS"
   },
   {
     label: "translate-transcribe-bedrock-sagemaker",
-    value: "translate.transcribe-bedrock.sagemaker-tts"
+    value: "translate.transcribe-bedrock.sagemaker-tts",
+    desc: "[Translation Mode] Transcribe ASR -> Bedrock LLM -> SageMaker TTS(You should deploy TTS model first)"
   },
   {
     label: "transcribe-bedrock-sagemaker",
-    value: "va.transcribe-bedrock.sagemaker-tts"
+    value: "va.transcribe-bedrock.sagemaker-tts",
+    desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> SageMaker TTS(deploy TTS model first)"
   },
   {
     label: "transcribe-bedrock-fishaudio",
-    value: "va.transcribe-bedrock.fish"
+    value: "va.transcribe-bedrock.fish",
+    desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> Fish Audio TTS"
   },
   {
     label: "transcribe-sagemaker_llm-polly",
-    value: "va.transcribe-sm_llm.polly"
+    value: "va.transcribe-sm_llm.polly",
+    desc: "[Chat Mode] Transcribe ASR -> SageMaker LLM(deploy LLM first) -> Polly TTS"
   },
   {
     label: "transcribe-sagemaker_llm-sagemaker_tts",
-    value: "va.transcribe-sm_llm.sm_tts"
+    value: "va.transcribe-sm_llm.sm_tts",
+    desc: "[Chat Mode] Transcribe ASR -> SageMaker LLM(deploy LLM first) -> SageMaker TTS(deploy TTS model first)"
   }
 ]
 export const LANG_OPTIONS = [
