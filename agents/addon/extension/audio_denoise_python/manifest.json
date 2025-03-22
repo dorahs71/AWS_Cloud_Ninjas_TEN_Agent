@@ -1,0 +1,33 @@
+{
+    "type": "extension",
+    "name": "audio_denoise_python",
+    "version": "0.1.0",
+    "language": "python",
+    "dependencies": [
+        {
+            "type": "system",
+            "name": "rte_runtime_python",
+            "version": "0.4.0"
+        }
+    ],
+    "api": {
+        "property": {
+            "sample_rate_in": {
+                "type": "string"
+            },
+            "sample_rate_out": {
+                "type": "string"
+            }
+        },
+        "pcm_frame_in": [
+            {
+                "name": "pcm_frame"
+            }
+        ],
+        "pcm_frame_out": [
+            {
+                "name": "pcm_frame"
+            }
+        ]
+    }
+}

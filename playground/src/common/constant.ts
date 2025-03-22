@@ -26,6 +26,11 @@ export const GRAPH_NAME_OPTIONS = [
     desc: "[Chat Mode] Transcribe ASR -> Dify KB -> Polly TTS. Don't allow interrupt before completing prior request."
   },
   {
+    label: "transcribe-bedrock-polly-denoising",
+    value: "va.transcribe-bedrock.polly.denoising",
+    desc: "[Chat Mode] Denoised Transcribe ASR -> Bedrock LLM -> Polly TTS"
+  },
+  {
     label: "transcribe-bedrock-polly",
     value: "va.transcribe-bedrock.polly",
     desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> Polly TTS"
