@@ -41,6 +41,9 @@ class AudioDenoiseExtension(Extension):
         # Audio processing resources
         self.denoiser = None
         
+        # Initialize the denoising model
+        self.__init_denoise_model()
+        
         # Thread-safe queue for handling multiple frames
         # Capacity: ~30 seconds of audio (3000 frames at 10ms each)
         self.frame_queue = queue.Queue(maxsize=3000)
@@ -197,9 +200,6 @@ class AudioDenoiseExtension(Extension):
             # Create and set the event loop for this thread
             self.loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self.loop)
-            
-            # Initialize the denoising model
-            self.__init_denoise_model()
             
             # Track total duration for batched frames
             total_batch_duration_ms = 0
@@ -449,11 +449,11 @@ class AudioDenoiseExtension(Extension):
                 model_load_time = time.time() - model_load_start
                 logger.info(f"Audio denoising model loaded in {model_load_time:.2f} seconds")
                 
-                # # Warmup inference with empty audio to initialize internal state
-                # logger.debug("Performing warmup inference")
-                # self.denoiser(bytes(3840))  # 3840 bytes = 1920 samples at 16-bit
-                # logger.debug("Warmup inference completed")
-                
+                # Warmup inference with empty audio to initialize internal state
+                logger.debug("Performing warmup inference")
+                for i in range(100):
+                    self.denoiser(bytes(3840))  # 3840 bytes = 1920 samples at 16-bit
+                logger.debug("Warmup inference completed")
             except Exception as e:
                 logger.exception(f"Failed to initialize denoising model: {e}")
                 raise
