@@ -11,6 +11,7 @@ const (
 	// Extension name
 	extensionNameAgoraRTC      = "agora_rtc"
 	extensionNameBedrockLLM    = "bedrock_llm"
+	extensionNameBedrockMCP    = "bedrock_mcp"
 	extensionNameDify          = "dify"
 	extensionNameAzureTTS      = "azure_tts"
 	extensionNameCosyTTS       = "cosy_tts"
@@ -155,9 +156,27 @@ var (
 		"Greeting": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "greeting"},
 			{ExtensionName: extensionNameDify, Property: "greeting"},
+			{ExtensionName: extensionNameBedrockMCP, Property: "greeting"},
 		},
 		"SystemPrompt": {
 			{ExtensionName: extensionNameBedrockLLM, Property: "prompt"},
+			{ExtensionName: extensionNameBedrockMCP, Property: "prompt"},
+		},
+		"MaxMemoryLength": {
+			{ExtensionName: extensionNameBedrockLLM, Property: "max_memory_length"},
+			{ExtensionName: extensionNameBedrockMCP, Property: "max_memory_length"},
+		},
+		"McpApiBase": {
+			{ExtensionName: extensionNameBedrockMCP, Property: "base_url"},
+		},
+		"McpApiKey": {
+			{ExtensionName: extensionNameBedrockMCP, Property: "api_key"},
+		},
+		"McpSelectedServers": {
+			{ExtensionName: extensionNameBedrockMCP, Property: "mcp_server_ids"},
+		},
+		"McpModel": {
+			{ExtensionName: extensionNameBedrockMCP, Property: "model"},
 		},
 	}
 

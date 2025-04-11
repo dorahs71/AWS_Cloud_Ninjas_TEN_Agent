@@ -14,7 +14,8 @@ var (
 	codeErrChannelNotExisted   = NewCode("10002", "channel not existed")
 	codeErrChannelExisted      = NewCode("10003", "channel existed")
 	codeErrChannelEmpty        = NewCode("10004", "channel empty")
-	codeErrGenerateTokenFailed = NewCode("10005", "generate token failed")
+	codeErrMcpApiBaseEmpty     = NewCode("10005", "MCP API Base empty")
+	codeErrGenerateTokenFailed = NewCode("10006", "generate token failed")
 
 	codeErrProcessPropertyFailed = NewCode("10100", "process property json failed")
 	codeErrStartWorkerFailed     = NewCode("10101", "start worker failed")

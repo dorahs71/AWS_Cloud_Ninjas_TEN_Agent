@@ -35,7 +35,7 @@
 }
 
 .settingGroup {
-    padding: 16px;
+    padding: 16px 0;
     background: #181A1D;
 
     .settingItem {
@@ -49,7 +49,27 @@
             font-size: 14px;
             font-weight: 500;
             color: var(--Grey-300, #EAECF0);
+            margin-bottom: 4px;
+        }
+
+        .warn,
+        .desc {
+            font-size: 13px;
             margin-bottom: 8px;
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        .desc {
+            color: var(--Grey-300, #EAECF0);
+
+            a {
+                color: dodgerblue;
+            }
+        }
+
+        .warn {
+            color: yellow;
         }
 
         .select {
@@ -63,9 +83,19 @@
             color: var(--Grey-300, #EAECF0);
         }
 
+        .input {
+            width: 100%;
+            background: #181A1D;
+            border-color: #272A2F;
+            color: var(--Grey-300, #EAECF0);
+
+            &::placeholder {
+                color: #666D7A;
+            }
+        }
+
         .textarea {
             width: 100%;
-            min-height: 100px;
             resize: vertical;
             background: #181A1D;
             border-color: #272A2F;
@@ -73,6 +103,31 @@
 
             &::placeholder {
                 color: #666D7A;
+            }
+        }
+
+        .modelList,
+        .serverList {
+            background: #1E2023;
+            border: 1px solid #272A2F;
+            border-radius: 4px;
+            padding: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+
+        .modelItem,
+        .serverItem {
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            background: #272A2F;
+            border-radius: 4px;
+            color: var(--Grey-300, #EAECF0);
+            font-size: 13px;
+
+            &:last-child {
+                margin-bottom: 0;
             }
         }
     }

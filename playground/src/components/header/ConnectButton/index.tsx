@@ -29,6 +29,10 @@ const ConnectButton = () => {
     const [partialStabilization, setPartialStabilization] = useState(false)
     const [voice, setVoice] = useState("male")
     const [greeting, setGreeting] = useState("")
+    const [mcpSelectedServers, setMcpSelectedServers] = useState<string[]>([])
+    const [mcpApiBase, setMcpApiBase] = useState("")
+    const [mcpApiKey, setMcpApiKey] = useState("")
+    const [mcpSelectedModel, setMcpSelectedModel] = useState("")
 
     // Load initial settings and listen for changes
     useEffect(() => {
@@ -43,6 +47,10 @@ const ConnectButton = () => {
                 setPartialStabilization(settings.partialStabilization || false)
                 setVoice(settings.voice || "male")
                 setGreeting(settings.greeting || "")
+                setMcpSelectedServers(settings.mcpSelectedServers || [])
+                setMcpApiBase(settings.mcpApiBase || "")
+                setMcpApiKey(settings.mcpApiKey || "")
+                setMcpSelectedModel(settings.mcpSelectedModel || "")
             }
         }
 
@@ -59,6 +67,10 @@ const ConnectButton = () => {
             setPartialStabilization(settings.partialStabilization)
             setVoice(settings.voice)
             setGreeting(settings.greeting)
+            setMcpSelectedServers(settings.mcpSelectedServers || [])
+            setMcpApiBase(settings.mcpApiBase || "")
+            setMcpApiKey(settings.mcpApiKey || "")
+            setMcpSelectedModel(settings.mcpSelectedModel || "")
         }
 
         window.addEventListener('astra-settings-changed', handleSettingsChange as EventListener)
@@ -86,6 +98,10 @@ const ConnectButton = () => {
                 outputLanguage: outputLanguage,
                 partialStabilization: partialStabilization,
                 greeting: greeting,
+                mcpSelectedServers: mcpSelectedServers.join(','),
+                mcpApiBase: mcpApiBase,
+                mcpApiKey: mcpApiKey,
+                mcpModel: mcpSelectedModel
             })
 
             if (res?.code != 0) {

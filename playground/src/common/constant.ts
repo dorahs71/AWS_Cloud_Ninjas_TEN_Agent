@@ -21,47 +21,47 @@ export const MODE_OPTIONS = [
 ]
 export const GRAPH_NAME_OPTIONS = [
   {
+    label: "MCP/Bedrock Base",
+    value: "va.transcribe-bedrock_mcp.polly",
+    desc: "[Chat Mode] Transcribe ASR -> Bedrock MCP -> Polly TTS. Configure and Connect to MCP first."
+  },
+  {
     label: "Dify Knowledge Base",
-    value: "va.transcribe-dify.polly",
-    desc: "[Chat Mode] Transcribe ASR -> Dify KB -> Polly TTS. Don't allow interrupt before completing prior request."
+    value: "va.dify.polly",
+    desc: "[Chat Mode] Transcribe ASR -> Dify KB -> Polly TTS"
   },
   {
-    label: "transcribe-bedrock-polly-denoising",
-    value: "va.transcribe-bedrock.polly.denoising",
-    desc: "[Chat Mode] Denoised Transcribe ASR -> Bedrock LLM -> Polly TTS"
-  },
-  {
-    label: "transcribe-bedrock-polly",
+    label: "Bedrock Base - Chat",
     value: "va.transcribe-bedrock.polly",
     desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> Polly TTS"
   },
   {
-    label: "translate-transcribe-bedrock-polly",
+    label: "Bedrock Base - Translate",
     value: "translate.transcribe-bedrock.polly",
     desc: "[Translation Mode] Transcribe ASR -> Bedrock LLM -> Polly TTS"
   },
   {
-    label: "translate-transcribe-bedrock-sagemaker",
+    label: "[Customize] Bedrock + SM TTS - Translate",
     value: "translate.transcribe-bedrock.sagemaker-tts",
     desc: "[Translation Mode] Transcribe ASR -> Bedrock LLM -> SageMaker TTS(You should deploy TTS model first)"
   },
   {
-    label: "transcribe-bedrock-sagemaker",
+    label: "[Customize] Bedrock + SM TTS - Chat",
     value: "va.transcribe-bedrock.sagemaker-tts",
     desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> SageMaker TTS(deploy TTS model first)"
   },
   {
-    label: "transcribe-bedrock-fishaudio",
+    label: "[Customize] Bedrock + FishAudio TTS - Chat",
     value: "va.transcribe-bedrock.fish",
     desc: "[Chat Mode] Transcribe ASR -> Bedrock LLM -> Fish Audio TTS"
   },
   {
-    label: "transcribe-sagemaker_llm-polly",
+    label: "[Customize] SM LLM - Chat",
     value: "va.transcribe-sm_llm.polly",
     desc: "[Chat Mode] Transcribe ASR -> SageMaker LLM(deploy LLM first) -> Polly TTS"
   },
   {
-    label: "transcribe-sagemaker_llm-sagemaker_tts",
+    label: "[Customize] SM LLM + SM TTS - Chat",
     value: "va.transcribe-sm_llm.sm_tts",
     desc: "[Chat Mode] Transcribe ASR -> SageMaker LLM(deploy LLM first) -> SageMaker TTS(deploy TTS model first)"
   }

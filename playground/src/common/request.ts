@@ -11,6 +11,11 @@ interface StartRequestConfig {
   outputLanguage: string,
   partialStabilization: boolean,
   greeting: string,
+  maxMemoryLength?: number,
+  mcpSelectedServers?: string,
+  mcpApiBase?: string,
+  mcpApiKey?: string,
+  mcpModel?: string,
 }
 
 interface GenAgoraDataConfig {
@@ -39,7 +44,22 @@ export const apiGenAgoraData = async (config: GenAgoraDataConfig) => {
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
   const url = `${REQUEST_URL}/start`
-  const { language, channel, userId, voiceType, graphName, mode, outputLanguage, partialStabilization, greeting } = config
+  const {
+    language,
+    channel,
+    userId,
+    voiceType,
+    graphName,
+    mode,
+    outputLanguage,
+    partialStabilization,
+    greeting,
+    mcpSelectedServers,
+    mcpApiBase,
+    mcpApiKey,
+    mcpModel,
+    maxMemoryLength,
+  } = config
   const data = {
     request_id: genUUID(),
     agora_asr_language: language,
@@ -52,6 +72,11 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
     output_language: outputLanguage,
     enable_partial_results_stabilization: partialStabilization,
     greeting: greeting.trim(),
+    max_memory_length: maxMemoryLength,
+    mcp_selected_servers: mcpSelectedServers,
+    mcp_api_base: mcpApiBase || "",
+    mcp_api_key: mcpApiKey || "",
+    mcp_model: mcpModel || "",
   }
   let resp: any = await fetch(url, {
     method: "POST",
@@ -87,6 +112,25 @@ export const apiPing = async (channel: string) => {
   const data = {
     request_id: genUUID(),
     channel_name: channel
+  }
+  let resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+  resp = (await resp.json()) || {}
+  return resp
+}
+
+// mcp info
+export const apiMcpInfo = async (api_base: string, api_key: string, sub_path: string): Promise<any> => {
+  const url = `${REQUEST_URL}/mcp/info`
+  const data = {
+    api_base: api_base,
+    api_key: api_key,
+    sub_path: sub_path
   }
   let resp = await fetch(url, {
     method: "POST",

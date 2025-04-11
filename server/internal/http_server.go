@@ -8,6 +8,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -56,6 +57,11 @@ type StartReq struct {
 	PartialStabilization bool   `json:"enable_partial_results_stabilization,omitempty"`
 	Greeting             string `json:"greeting,omitempty"`
 	SystemPrompt         string `json:"system_prompt,omitempty"`
+	MaxMemoryLength      int    `json:"max_memory_length,omitempty"`
+	McpApiKey            string `json:"mcp_api_key,omitempty"`
+	McpApiBase           string `json:"mcp_api_base,omitempty"`
+	McpModel             string `json:"mcp_model,omitempty"`
+	McpSelectedServers   string `json:"mcp_selected_servers,omitempty"`
 }
 
 type StopReq struct {
@@ -67,6 +73,12 @@ type GenerateTokenReq struct {
 	RequestId   string `json:"request_id,omitempty"`
 	ChannelName string `json:"channel_name,omitempty"`
 	Uid         uint32 `json:"uid,omitempty"`
+}
+
+type McpTestReq struct {
+	ApiBase string `json:"api_base,omitempty"`
+	SubPath string `json:"sub_path,omitempty"`
+	ApiKey  string `json:"api_key,omitempty"`
 }
 
 func NewHttpServer(httpServerConfig *HttpServerConfig) *HttpServer {
@@ -228,6 +240,55 @@ func (s *HttpServer) handlerGenerateToken(c *gin.Context) {
 	s.output(c, codeSuccess, map[string]any{"appId": s.config.AppId, "token": token, "channel_name": req.ChannelName, "uid": req.Uid})
 }
 
+func (s *HttpServer) handlerMcpInfo(c *gin.Context) {
+	var req McpTestReq
+
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
+		slog.Error("handlerMcpTest params invalid", "err", err, logTag)
+		s.output(c, codeErrParamsInvalid, http.StatusBadRequest)
+		return
+	}
+
+	slog.Info("handlerMcpTest start", "req", req, logTag)
+
+	if strings.TrimSpace(req.ApiBase) == "" {
+		slog.Error("handlerMcpTest ApiBase empty", logTag)
+		s.output(c, codeErrMcpApiBaseEmpty, http.StatusBadRequest)
+		return
+	}
+
+	mcpServerUrl := fmt.Sprintf("%s/%s", req.ApiBase, req.SubPath)
+
+	res, err := HttpClient.R().
+		SetHeader("Content-Type", "application/json").
+		SetHeader("Authorization", fmt.Sprintf("Bearer %s", req.ApiKey)).
+		Get(mcpServerUrl)
+
+	if err != nil {
+		slog.Error("handlerMcpTest HTTP request failed", "err", err, logTag)
+		s.output(c, codeErrParamsInvalid, http.StatusBadRequest)
+		return
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		slog.Error("handlerMcpTest HTTP status not OK", "status", res.StatusCode(), logTag)
+		s.output(c, codeErrParamsInvalid, http.StatusBadRequest)
+		return
+	}
+
+	slog.Info("handlerMcpTest end", logTag)
+
+	// Parse response body as JSON
+	var jsonResponse map[string]interface{}
+	if err := json.Unmarshal(res.Body(), &jsonResponse); err != nil {
+		slog.Error("handlerMcpTest JSON parsing failed", "err", err, logTag)
+		s.output(c, codeErrParamsInvalid, http.StatusBadRequest)
+		return
+	}
+
+	s.output(c, codeSuccess, jsonResponse)
+}
+
 func (s *HttpServer) output(c *gin.Context, code *Code, data any, httpStatus ...int) {
 	if len(httpStatus) == 0 {
 		httpStatus = append(httpStatus, http.StatusOK)
@@ -301,6 +362,7 @@ func (s *HttpServer) Start() {
 	r.POST("/start", s.handlerStart)
 	r.POST("/stop", s.handlerStop)
 	r.POST("/token/generate", s.handlerGenerateToken)
+	r.POST("/mcp/info", s.handlerMcpInfo)
 
 	slog.Info("server start", "port", s.config.Port, logTag)
 
