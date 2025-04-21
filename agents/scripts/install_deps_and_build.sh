@@ -53,7 +53,19 @@ install_python_requirements() {
 
   # traverse the addon/extension directory to find the requirements.txt
   if [[ -d "addon/extension" ]]; then
+    exclude_dirs=("openai_chatgpt_python" "qwen_llm_python" "dify_python" "elevenlabs_tts_python") # directory names to exclude
     for extension in addon/extension/*; do
+      dir_name=$(basename "$extension")
+      skip=false
+      for ex in "${exclude_dirs[@]}"; do
+        if [[ "$dir_name" == "$ex" ]]; then
+          skip=true
+          break
+        fi
+      done
+      if $skip; then
+        continue
+      fi
       if [[ -f "$extension/requirements.txt" ]]; then
         pip install uv
         uv pip install --system -r $extension/requirements.txt
