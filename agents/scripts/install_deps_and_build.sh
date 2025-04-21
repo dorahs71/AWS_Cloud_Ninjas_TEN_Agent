@@ -47,14 +47,16 @@ install_python_requirements() {
   local app_dir=$1
 
   if [[ -f "requirements.txt" ]]; then
-    pip install -r requirements.txt
+    pip install uv
+    uv pip install --system -r requirements.txt
   fi
 
   # traverse the addon/extension directory to find the requirements.txt
   if [[ -d "addon/extension" ]]; then
     for extension in addon/extension/*; do
       if [[ -f "$extension/requirements.txt" ]]; then
-        pip install -r $extension/requirements.txt
+        pip install uv
+        uv pip install --system -r $extension/requirements.txt
       fi
     done
   fi
