@@ -1,0 +1,55 @@
+FROM ghcr.io/ten-framework/astra_agents_build:0.3.5
+
+WORKDIR /app
+
+COPY agents/go.mod agents/go.sum ./agents/
+COPY agents/scripts ./agents/scripts/
+COPY server/go.mod server/go.sum ./server/
+
+COPY agents/addon/extension ./agents/addon/extension/
+
+COPY agents/manifest.json ./agents/
+COPY agents/property.json ./agents/
+COPY agents/property.json.example ./agents/
+
+RUN cd agents && arpm install
+
+RUN cd agents && \
+    for ext_dir in addon/extension/*; do \
+        if [ -d "$ext_dir" ] && [ -f "$ext_dir/go.mod" ]; then \
+            echo "Downloading Go modules for $ext_dir" && \
+            cd "$ext_dir" && go mod tidy && go mod download && cd /app/agents; \
+        fi; \
+    done
+
+RUN cd agents && go mod tidy && go mod download
+RUN cd server && go mod tidy && go mod download
+
+RUN cd agents && pip install --upgrade pip setuptools && \
+    pip install uv && \
+    if [ -f requirements.txt ]; then uv pip install --system -r requirements.txt; fi
+
+RUN cd agents && pip install --upgrade pip setuptools && \
+    pip install uv && \
+    if [ -f requirements.txt ]; then uv pip install --system -r requirements.txt; fi && \
+    for extension in addon/extension/*; do \
+      if [ -d "$extension" ] && [ -f "$extension/requirements.txt" ]; then \
+        dir_name=$(basename "$extension"); \
+        if [ "$dir_name" != "openai_chatgpt_python" ] && [ "$dir_name" != "qwen_llm_python" ] && \
+           [ "$dir_name" != "dify_python" ] && [ "$dir_name" != "elevenlabs_tts_python" ]; then \
+          uv pip install --system -r "$extension/requirements.txt"; \
+        fi; \
+      fi; \
+    done
+
+RUN cd agents && \
+    go mod tidy
+
+RUN cd agents && \
+    for ext_dir in addon/extension/*; do \
+        if [ -d "$ext_dir" ] && [ -f "$ext_dir/go.mod" ]; then \
+            cd "$ext_dir" && go generate && cd /app/agents; \
+        fi; \
+    done
+
+CMD ["bash"]
