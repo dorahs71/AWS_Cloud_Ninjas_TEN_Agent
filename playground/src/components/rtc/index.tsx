@@ -93,17 +93,15 @@ const Rtc = () => {
     }
   }
 
-  return <section className={styles.rtc}>
-    <div className={styles.header}>Audio & Video</div>
+  return <section>
+    {/* <div className={styles.header}>Audio & Video</div> */}
     {/* agent */}
-    <Agent audioTrack={remoteuser?.audioTrack}></Agent>
+    {/* <Agent audioTrack={remoteuser?.audioTrack}></Agent> */}
     {/* you */}
-    <div className={styles.you}>
-      <div className={styles.title}>You</div>
+    
+    <div>
       {/* microphone */}
-      <MicSection audioTrack={audioTrack}></MicSection>
-      {/* camera */}
-      <CamSection videoTrack={videoTrack}></CamSection>
+       <MicSection audioTrack={audioTrack}></MicSection>
     </div>
   </section>
 }

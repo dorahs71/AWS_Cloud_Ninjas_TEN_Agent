@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { useMultibandTrackVolume, useSmallScreen } from "@/common"
 import AudioVisualizer from "../audioVisualizer"
+import RobotFace from "../robotFace"
 import { MicIcon } from "@/components/icons"
 import styles from "./index.module.scss"
 import { IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
@@ -49,22 +50,23 @@ const MicSection = (props: MicSectionProps) => {
   }
 
   return <div className={styles.microphone}>
-    <div className={styles.select}>
+    {/* <div className={styles.select}>
       <span className={styles.text}>{MicText}</span>
       <span className={styles.iconWrapper} onClick={onClickMute}>
         <MicIcon active={!audioMute} width={20} height={20} viewBox="0 0 24 24"></MicIcon>
       </span>
       <MicSelect audioTrack={audioTrack}></MicSelect>
-    </div>
+    </div> */}
     <div className={styles.view}>
-      <AudioVisualizer
+      <RobotFace></RobotFace>
+      {/* <AudioVisualizer
         type="user"
         barWidth={4}
         minBarHeight={2}
         maxBarHeight={50}
         frequencies={subscribedVolumes}
         borderRadius={2}
-        gap={4}></AudioVisualizer>
+        gap={4}></AudioVisualizer> */}
     </div>
   </div>
 }
