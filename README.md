@@ -65,6 +65,8 @@ In the root of the project, use `cp` command to create `.env` from the example.
 It will be used to store information for `docker compose` later.
 ```bash
 cp ./.env.example ./.env
+cp ./agents/property.json.example ./agents/property.json
+cp ./playground/.env.example ./playground/.env
 ```
 
 #### 2. Setup API keys
