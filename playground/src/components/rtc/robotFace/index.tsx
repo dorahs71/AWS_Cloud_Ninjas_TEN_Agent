@@ -12,6 +12,7 @@ const RobotFace: React.FC = () => {
         loading="eager"
         decoding="async"   
       />
+      <div className={styles.whiteRectangle}></div>
     </div>
   );
 };

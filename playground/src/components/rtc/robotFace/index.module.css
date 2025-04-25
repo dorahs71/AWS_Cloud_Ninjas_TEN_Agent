@@ -11,7 +11,18 @@
 }
 
 .fullScreenImage {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 95vh;
   object-fit: contain;
+  position: absolute;
+  z-index: 1;
+}
+
+
+.whiteRectangle {
+  position: absolute;
+  width: 400px;  /* 可以調整寬度 */
+  height: 200px; /* 可以調整高度 */
+  background-color: white;
+  border-radius: 10px; /* 可選：添加圓角 */
 }
