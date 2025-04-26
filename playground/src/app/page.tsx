@@ -50,38 +50,11 @@ export default function Home() {
 
   return (
     <AuthInitializer>
-      <main className={styles.home} style={{
-        minHeight: isSmallScreen ? "auto" : "830px"
-      }}>
+      <main className={styles.home}>
         <Header></Header>
-        {isSmallScreen ?
-          <div className={styles.smallScreen}>
-            <div className={styles.menuWrapper}>
-              <Menu onChange={onMenuChange}></Menu>
-            </div>
-            <div className={styles.bodyWrapper}>
-              <div className={styles.item} style={{
-                visibility: activeMenu == "Agent" ? "visible" : "hidden",
-                zIndex: activeMenu == "Agent" ? 1 : -1
-              }}>
-                <Rtc></Rtc>
-              </div>
-              <div className={styles.item}
-                ref={wrapperRef}
-                style={{
-                  visibility: activeMenu == "Chat" ? "visible" : "hidden",
-                  zIndex: activeMenu == "Chat" ? 1 : -1
-                }}>
-                <Chat></Chat>
-              </div>
-            </div>
+          <div>
+            <Rtc></Rtc>    
           </div>
-          :
-          <div className={styles.content} suppressHydrationWarning={true}>
-            <Rtc></Rtc>
-            <Chat></Chat>
-          </div>
-        }
       </main>
     </AuthInitializer>
   )
