@@ -43,14 +43,16 @@ const RobotFace: React.FC = () => {
   }, [chatItems]);
 
   return (
-    <div className={styles.fullScreen}>
-      <img 
-        src={currentImage.src}
-        alt="LeopardCat Animation"
-        className={styles.fullScreenImage}
-        loading="eager"
-        decoding="async"   
-      />
+      <div className={styles.fullScreen}>
+          <div className={ styles.imageWrapper} >
+            <img 
+                src={currentImage.src}
+                alt="LeopardCat Animation"
+                className={styles.fullScreenImage}
+                loading="eager"
+                decoding="async"   
+                    />
+              </div>
       <div className={styles.whiteRectangle}></div>
     </div>
   );

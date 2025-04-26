@@ -41,8 +41,8 @@ const ConnectButton = () => {
             if (storedSettings) {
                 const settings = JSON.parse(storedSettings)
                 setMode(settings.mode || "chat")
-                setGraphName(settings.graphName || GRAPH_NAME_OPTIONS[0]['value'])
-                setLang(settings.lang || LANG_OPTIONS[0]['value'])
+                setGraphName(settings.graphName || GRAPH_NAME_OPTIONS[2]['value'])
+                setLang(settings.lang || LANG_OPTIONS[1]['value'])
                 setOutputLanguage(settings.outputLanguage || lang)
                 setPartialStabilization(settings.partialStabilization || false)
                 setVoice(settings.voice || "male")
