@@ -1,7 +1,7 @@
 import { IOptions, ColorItem } from "@/types"
 
 export const REQUEST_URL = process.env.NEXT_PUBLIC_REQUEST_URL ?? ""
-export const GITHUB_URL = "https://github.com/Chen188/TEN-Agent"
+export const GITHUB_URL = "https://github.com/dorahs71/AWS_Cloud_Ninjas_TEN_Agent"
 export const OPTIONS_KEY = "__options__"
 export const DEFAULT_OPTIONS: IOptions = {
   channel: "",
