@@ -1,6 +1,8 @@
 services:
     astra_agents_dev:
         image: ghcr.io/ten-framework/astra_agents_build:0.3.5
+        # To speed up container startup with: docker build -t cloud_ninja:latest -f Dockerfile.dev .
+        # image: cloud_ninja:latest
         container_name: astra_agents_dev
         platform: linux/amd64
         tty: true
