@@ -1,0 +1,3 @@
+pillow==10.4.0
+boto3==1.34.143
+pydantic
