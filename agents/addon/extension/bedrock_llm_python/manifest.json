@@ -44,6 +44,9 @@
       },
       "output_language": {
         "type": "string"
+      },
+      "enable_function_calling": {
+        "type": "bool"
       }
     },
     "data_in": [

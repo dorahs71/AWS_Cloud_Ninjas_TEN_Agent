@@ -69,6 +69,16 @@ class BedrockLLMExtension(Extension):
             logger.debug(
                 f"GetProperty optional {PROPERTY_MAX_MEMORY_LENGTH} failed, err: {err}."
             )
+            
+        # 讀取是否啟用函數調用的屬性
+        try:
+            enable_function_calling = rte.get_property_bool(PROPERTY_ENABLE_FUNCTION_CALLING)
+            bedrock_llm_config.enable_function_calling = enable_function_calling
+            logger.info(f"Function calling is {'enabled' if enable_function_calling else 'disabled'}")
+        except Exception as err:
+            logger.debug(
+                f"GetProperty optional {PROPERTY_ENABLE_FUNCTION_CALLING} failed, err: {err}. Using default value: {bedrock_llm_config.enable_function_calling}"
+            )
 
         bedrock_llm_config.validate()
 
@@ -190,6 +200,7 @@ class BedrockLLMExtension(Extension):
                 sentence = ""
                 full_content = ""
                 first_sentence_sent = False
+                tool_use = None
 
                 for event in stream:
                     # allow 100ms buffer time, in case interruptor's flush cmd comes just after on_data event
@@ -199,9 +210,58 @@ class BedrockLLMExtension(Extension):
 
                     if "contentBlockDelta" in event:
                         delta_types = event["contentBlockDelta"]["delta"].keys()
-                        # ignore other types of content: e.g toolUse
-                        if "text" in delta_types:
+                        if "toolUse" in delta_types:
+                            logger.info(f"Tool use detected: {event['contentBlockDelta']['delta']['toolUse']}")
+                            if tool_use is None:
+                                tool_use = event["contentBlockDelta"]["delta"]["toolUse"]
+                            else:
+                                if "name" in event["contentBlockDelta"]["delta"]["toolUse"]:
+                                    tool_use["name"] = event["contentBlockDelta"]["delta"]["toolUse"]["name"]
+                                if "input" in event["contentBlockDelta"]["delta"]["toolUse"]:
+                                    if "input" not in tool_use:
+                                        tool_use["input"] = {}
+                                    tool_use["input"].update(event["contentBlockDelta"]["delta"]["toolUse"]["input"])
+                        # 處理文本內容
+                        elif "text" in delta_types:
                             content = event["contentBlockDelta"]["delta"]["text"]
+                            full_content += content
+
+                            while True:
+                                sentence, content, sentence_is_final = parse_sentence(
+                                    sentence, content
+                                )
+                                if not sentence or not sentence_is_final:
+                                    # logger.info(f"sentence [{sentence}] is empty or not final")
+                                    break
+                                logger.info(
+                                    f"GetConverseStream recv for input text: [{raw_text}] got sentence: [{sentence}]"
+                                )
+
+                                # send sentence
+                                try:
+                                    output_data = Data.create("text_data")
+                                    output_data.set_property_string(
+                                        DATA_OUT_TEXT_DATA_PROPERTY_TEXT, sentence
+                                    )
+                                    output_data.set_property_bool(
+                                        DATA_OUT_TEXT_DATA_PROPERTY_TEXT_END_OF_SEGMENT, False
+                                    )
+                                    rte.send_data(output_data)
+                                    logger.info(
+                                        f"GetConverseStream recv for input text: [{raw_text}] sent sentence [{sentence}]"
+                                    )
+                                except Exception as err:
+                                    logger.info(
+                                        f"GetConverseStream recv for input text: [{raw_text}] send sentence [{sentence}] failed, err: {err}"
+                                    )
+                                    break
+
+                                sentence = ""
+                                if not first_sentence_sent:
+                                    first_sentence_sent = True
+                                    logger.info(
+                                        f"GetConverseStream recv for input text: [{raw_text}] first sentence sent, model's first_sentence_latency {get_current_time() - start_time}ms"
+                                    )
                     elif (
                         "internalServerException" in event
                         or "modelStreamErrorException" in event
@@ -214,45 +274,83 @@ class BedrockLLMExtension(Extension):
                         # ingore other events
                         continue
 
-                    full_content += content
-
-                    while True:
-                        sentence, content, sentence_is_final = parse_sentence(
-                            sentence, content
-                        )
-                        if not sentence or not sentence_is_final:
-                            # logger.info(f"sentence [{sentence}] is empty or not final")
-                            break
-                        logger.info(
-                            f"GetConverseStream recv for input text: [{raw_text}] got sentence: [{sentence}]"
-                        )
-
-                        # send sentence
+                # 如果檢測工具，執行工具並繼續對話
+                if tool_use and tool_use.get("name") == "calculator" and self.bedrock_llm.config.enable_function_calling:
+                    logger.info(f"執行計算器工具: {tool_use}")
+                    
+                    logger.info("開始執行計算工具")
+                    tool_result = self.bedrock_llm.execute_calculator_tool(tool_use)
+                    logger.info(f"計算工具執行結果: {tool_result}")
+                    
+                    tool_result_message = {
+                        "role": "user",
+                        "content": [
+                            {
+                                "toolResult": tool_result["toolResult"]
+                            }
+                        ]
+                    }
+                    memory.append(tool_result_message)
+                    logger.info(f"工具結果添加到記憶: {tool_result_message}")
+                    
+                    logger.info("發送計算結果到LLM獲取最終回應")
+                    final_resp = self.bedrock_llm.get_converse_resp(memory)
+                    logger.info(f"LLM最終回應: {final_resp is not None}")
+                    if final_resp and final_resp.get("stream"):
+                        final_stream = final_resp.get("stream")
+                        final_content = ""
+                        
+                        for final_event in final_stream:
+                            if "contentBlockDelta" in final_event:
+                                delta_types = final_event["contentBlockDelta"]["delta"].keys()
+                                if "text" in delta_types:
+                                    final_text = final_event["contentBlockDelta"]["delta"]["text"]
+                                    final_content += final_text
+                                    
+                                    while True:
+                                        sentence, final_text, sentence_is_final = parse_sentence(
+                                            sentence, final_text
+                                        )
+                                        if not sentence or not sentence_is_final:
+                                            break
+                                            
+                                        try:
+                                            output_data = Data.create("text_data")
+                                            output_data.set_property_string(
+                                                DATA_OUT_TEXT_DATA_PROPERTY_TEXT, sentence
+                                            )
+                                            output_data.set_property_bool(
+                                                DATA_OUT_TEXT_DATA_PROPERTY_TEXT_END_OF_SEGMENT, False
+                                            )
+                                            rte.send_data(output_data)
+                                            logger.info(f"Tool result response sent: [{sentence}]")
+                                        except Exception as err:
+                                            logger.error(f"Failed to send tool result sentence: {err}")
+                                            
+                                        sentence = ""
+                        
+                        if memory and memory[-1]['role'] == 'assistant':
+                            memory[-1]['content'].append({"text": final_content})
+                        else:
+                            memory.append(
+                                {"role": "assistant", "content": [{"text": final_content}]}
+                            )
+                        
                         try:
                             output_data = Data.create("text_data")
                             output_data.set_property_string(
                                 DATA_OUT_TEXT_DATA_PROPERTY_TEXT, sentence
                             )
                             output_data.set_property_bool(
-                                DATA_OUT_TEXT_DATA_PROPERTY_TEXT_END_OF_SEGMENT, False
+                                DATA_OUT_TEXT_DATA_PROPERTY_TEXT_END_OF_SEGMENT, True
                             )
                             rte.send_data(output_data)
-                            logger.info(
-                                f"GetConverseStream recv for input text: [{raw_text}] sent sentence [{sentence}]"
-                            )
+                            logger.info("Tool result end of segment sent")
                         except Exception as err:
-                            logger.info(
-                                f"GetConverseStream recv for input text: [{raw_text}] send sentence [{sentence}] failed, err: {err}"
-                            )
-                            break
-
-                        sentence = ""
-                        if not first_sentence_sent:
-                            first_sentence_sent = True
-                            logger.info(
-                                f"GetConverseStream recv for input text: [{raw_text}] first sentence sent, model's first_sentence_latency {get_current_time() - start_time}ms"
-                            )
-
+                            logger.error(f"Failed to send tool result end of segment: {err}")
+                        
+                        return
+                
                 if len(full_content.strip()):
                     # remember response as assistant content in memory
                     if memory and memory[-1]['role'] == 'assistant':

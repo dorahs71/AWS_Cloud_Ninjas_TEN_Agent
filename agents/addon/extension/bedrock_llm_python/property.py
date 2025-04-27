@@ -12,6 +12,7 @@ PROPERTY_MODE = "mode"  # Optional
 PROPERTY_INPUT_LANGUAGE = "input_language"  # Optional
 PROPERTY_OUTPUT_LANGUAGE = "output_language"  # Optional
 PROPERTY_USER_TEMPLATE = "user_template"  # Optional
+PROPERTY_ENABLE_FUNCTION_CALLING = "enable_function_calling"  # Optional
 
 CMD_IN_FLUSH = "flush"
 CMD_OUT_FLUSH = "flush"

@@ -1893,7 +1893,7 @@
                             "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
                             "max_tokens": 512,
                             "prompt": "",
-                            "greeting": "ASTRA agent connected. How can i help you today?",
+                            "greeting": "長春集團石虎機器人已上線，我可以幫你什麼?",
                             "max_memory_length": 10
                         }
                     },
