@@ -16,7 +16,7 @@ Cloud_Ninjas 石虎語音機器人是一款基於 TEN Framework 開發的多語�
 
 ## 即時演示
 
-[Demo Video](https://d340gc1xzxnox1.cloudfront.net/](https://drive.google.com/file/d/1UsNMP1LSYU7lUyZ7ifsKrmsX_AoDUstt/view)
+[Demo Video](https://drive.google.com/file/d/1UsNMP1LSYU7lUyZ7ifsKrmsX_AoDUstt/view)
 ![Cloud_Ninjas 石虎語音機器人](https://github.com/user-attachments/assets/8d924b8f-2586-4c98-84c7-716f0024f547)
 
 
@@ -31,22 +31,17 @@ Cloud_Ninjas 石虎語音機器人是一款基於 TEN Framework 開發的多語�
 
 ## 核心技術
 
-### 語音識別 (STT)
+#### 語音識別 (STT)
 [Amazon Transcribe](https://aws.amazon.com/tw/pm/transcribe/?trk=4a32c3d2-f78f-4d92-ad96-aec3dffab4d4&sc_channel=ps&ef_id=Cj0KCQjwiLLABhCEARIsAJYS6umgVa1eaYpcvXH4oYAI25XV9P4pcYLNMT_vw0MmHKTXs52Zt-vXsdcaAmkiEALw_wcB:G:s&s_kwcid=AL!4422!3!652835877972!e!!g!!amazon%20transcribe!19910625970!151321783327&gbraid=0AAAAADjHtp-Mw8Qry3JFf3oO2OnmtgZmV&gclid=Cj0KCQjwiLLABhCEARIsAJYS6umgVa1eaYpcvXH4oYAI25XV9P4pcYLNMT_vw0MmHKTXs52Zt-vXsdcaAmkiEALw_wcB)
 
-### 大型語言模型
+#### 大型語言模型
 [Amazon Bedrock](https://aws.amazon.com/tw/bedrock/?trk=c0acda64-df2a-4080-9d0d-938d8963b57d&sc_channel=ps&ef_id=Cj0KCQjwiLLABhCEARIsAJYS6uneGsr3ByO6cZQWZYT5AuddrlLwVoYEzb4pnzGdgBQD_BGR6XKqSB0aAgTjEALw_wcB:G:s&s_kwcid=AL!4422!3!692062175189!e!!g!!amazon%20bedrock!21054971942!158684192785&gbraid=0AAAAADjHtp9WAgvzcS5eZS-FHVGXt86mj&gclid=Cj0KCQjwiLLABhCEARIsAJYS6uneGsr3ByO6cZQWZYT5AuddrlLwVoYEzb4pnzGdgBQD_BGR6XKqSB0aAgTjEALw_wcB)
 
-### 語音合成 (TTS)
+#### 語音合成 (TTS)
 [Amazon Polly](https://aws.amazon.com/tw/polly/)
 
-### 實時通信
+#### 實時通信
 [Agora RTC](https://www.agora.io/en/)
-
-## 系統架構
-
-### TEN Framework 架構
-![TEN Framework](https://github.com/TEN-framework/docs/blob/main/assets/gif/graph_designer.gif?raw=true)
 
 ### 數據流架構
 ```
