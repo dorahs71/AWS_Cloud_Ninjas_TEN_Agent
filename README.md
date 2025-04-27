@@ -1,7 +1,7 @@
-# [Cloud_Ninjas_Agent](https://d340gc1xzxnox1.cloudfront.net/)
+# [Cloud_Ninjas 石虎語音機器人](https://d340gc1xzxnox1.cloudfront.net/)
 
 命題企業 : 長春集團
-Cloud_Ninjas_Agent 石虎語音機器人是一款基於 TEN Framework 開發的多語音機器人，能夠與使用者進行自然的語音對話。
+Cloud_Ninjas 石虎語音機器人是一款基於 TEN Framework 開發的多語音機器人，能夠與使用者進行自然的語音對話。
 
 ## 目錄
 
@@ -16,7 +16,8 @@ Cloud_Ninjas_Agent 石虎語音機器人是一款基於 TEN Framework 開發的�
 
 ## 即時演示
 
-[Demo Video]([https://d340gc1xzxnox1.cloudfront.net/](https://drive.google.com/file/d/1UsNMP1LSYU7lUyZ7ifsKrmsX_AoDUstt/view))
+[Demo Video](https://d340gc1xzxnox1.cloudfront.net/](https://drive.google.com/file/d/1UsNMP1LSYU7lUyZ7ifsKrmsX_AoDUstt/view)
+![Cloud_Ninjas 石虎語音機器人](https://github.com/user-attachments/assets/8d924b8f-2586-4c98-84c7-716f0024f547)
 
 
 ## 主要功能
