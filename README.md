@@ -1,157 +1,174 @@
-![Astra banner image](https://github.com/TEN-framework/docs/blob/main/assets/jpg/astra_banner.jpg?raw=true)
-<div align="center">
+# [Cloud_Ninjas_Agent](https://d340gc1xzxnox1.cloudfront.net/)
 
-[![Follow on X](https://img.shields.io/twitter/follow/AstraAIAgent?logo=X&color=%20%23f5f5f5)](https://twitter.com/intent/follow?screen_name=AstraAIAgent)
-![Product fee](https://img.shields.io/badge/pricing-free-blue.svg?labelColor=%20%239b8afb&color=%20%237a5af8)
-[![Discussion posts](https://img.shields.io/github/discussions/TEN-framework/astra.ai?labelColor=%20%23FDB062&color=%20%23f79009)](https://github.com/TEN-framework/astra.ai/discussions/)
-[![Commits](https://img.shields.io/github/commit-activity/m/TEN-framework/astra.ai?labelColor=%20%237d89b0&color=%20%235d6b98)](https://github.com/TEN-framework/astra.ai/graphs/commit-activity)
-[![Issues closed](https://img.shields.io/github/issues-search?query=repo%3ATEN-framework%2Fastra.ai%20is%3Aclosed&label=issues%20closed&labelColor=green&color=green)](https://github.com/TEN-framework/ASTRA.ai/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/TEN-framework/ASTRA.ai/pulls)
-[![GitHub license](https://img.shields.io/badge/License-Apache_2.0-blue.svg?labelColor=%20%23155EEF&color=%20%23528bff)](https://github.com/TEN-framework/ASTRA.ai/blob/main/LICENSE)
+命題企業 : 長春集團
+Cloud_Ninjas_Agent 石虎語音機器人是一款基於 TEN Framework 開發的多語音機器人，能夠與使用者進行自然的語音對話。
 
-[![Discord TEN Community](https://dcbadge.vercel.app/api/server/VnPftUzAMJ)](https://discord.gg/VnPftUzAMJ)
+## 目錄
 
-[![GitHub watchers](https://img.shields.io/github/watchers/TEN-framework/astra.ai?style=social&label=Watch)](https://GitHub.com/TEN-framework/astra.ai/watchers/?WT.mc_id=academic-105485-koreyst)
-[![GitHub forks](https://img.shields.io/github/forks/TEN-framework/astra.ai?style=social&label=Fork)](https://GitHub.com/TEN-framework/astra.ai/network/?WT.mc_id=academic-105485-koreyst)
-[![GitHub stars](https://img.shields.io/github/stars/TEN-framework/astra.ai?style=social&label=Star)](https://GitHub.com/TEN-framework/astra.ai/stargazers/?WT.mc_id=academic-105485-koreyst)
+- [目錄](#目錄)
+- [即時演示](#即時演示)
+- [主要功能](#主要功能)
+- [核心技術](#核心技術)
+- [系統架構](#系統架構)
+- [後端技術](#後端技術)
+- [前端技術](#前端技術)
+- [擴展配置](#擴展配置)
 
-<a href="https://github.com/Chen188/ASTRA.ai/blob/main/README.md"><img alt="README in English" src="https://img.shields.io/badge/English-lightgrey"></a>
-<a href="https://github.com/Chen188/astra.ai/blob/main/docs/readmes/README-CN.md"><img alt="简体中文操作指南" src="https://img.shields.io/badge/简体中文-lightgrey"></a>
+## 即時演示
+
+[Demo Video]([https://d340gc1xzxnox1.cloudfront.net/](https://drive.google.com/file/d/1UsNMP1LSYU7lUyZ7ifsKrmsX_AoDUstt/view))
 
 
-[Documentation](https://doc.theten.ai)
-<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-[Getting Started](https://doc.theten.ai/getting-started/quickstart)
-<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-[Tutorials](https://doc.theten.ai/getting-started/create-a-hello-world-extension)
+## 主要功能
 
-</div>
+- **實時語音對話**：透過 Amazon Transcribe 轉錄用戶語音輸入，並使用 Amazon Bedrock Nova Pro 模型生成回應
+- **函數調用能力**：支援數學計算等工具型功能，透過 Nova Pro 的 function calling 實現
+- **即時中斷**：用戶可以在機器人回應過程中隨時打斷並開始新的對話
+- **自然流暢響應**：使用 Amazon Polly 合成自然的語音輸出，支援多種引擎（標準、神經網絡、長篇和生成式）
+- **多語言支持**：支援多種語言的語音識別和合成
+- **可擴展架構**：基於 TEN Framework 的插件系統，可以輕鬆添加新的功能組件
 
-<br>
-<h2>Astra Agent</h2>
+## 核心技術
 
-[Astra multimodal agent](https://theastra.ai)
+### 語音識別 (STT)
+[Amazon Transcribe](https://aws.amazon.com/tw/pm/transcribe/?trk=4a32c3d2-f78f-4d92-ad96-aec3dffab4d4&sc_channel=ps&ef_id=Cj0KCQjwiLLABhCEARIsAJYS6umgVa1eaYpcvXH4oYAI25XV9P4pcYLNMT_vw0MmHKTXs52Zt-vXsdcaAmkiEALw_wcB:G:s&s_kwcid=AL!4422!3!652835877972!e!!g!!amazon%20transcribe!19910625970!151321783327&gbraid=0AAAAADjHtp-Mw8Qry3JFf3oO2OnmtgZmV&gclid=Cj0KCQjwiLLABhCEARIsAJYS6umgVa1eaYpcvXH4oYAI25XV9P4pcYLNMT_vw0MmHKTXs52Zt-vXsdcaAmkiEALw_wcB)
 
-Astra is a multimodal agent powered by [ TEN ](https://doc.theten.ai), demonstrating its capabilities in speech, vision, and reasoning through  RAG from local documentation.
+### 大型語言模型
+[Amazon Bedrock](https://aws.amazon.com/tw/bedrock/?trk=c0acda64-df2a-4080-9d0d-938d8963b57d&sc_channel=ps&ef_id=Cj0KCQjwiLLABhCEARIsAJYS6uneGsr3ByO6cZQWZYT5AuddrlLwVoYEzb4pnzGdgBQD_BGR6XKqSB0aAgTjEALw_wcB:G:s&s_kwcid=AL!4422!3!692062175189!e!!g!!amazon%20bedrock!21054971942!158684192785&gbraid=0AAAAADjHtp9WAgvzcS5eZS-FHVGXt86mj&gclid=Cj0KCQjwiLLABhCEARIsAJYS6uneGsr3ByO6cZQWZYT5AuddrlLwVoYEzb4pnzGdgBQD_BGR6XKqSB0aAgTjEALw_wcB)
 
-[![Showcase Astra multimodal agent](https://github.com/TEN-framework/docs/blob/main/assets/gif/astra_voice_agent.gif?raw=true)](https://theastra.ai)
-<br>
-<h2>How to build Astra locally
+### 語音合成 (TTS)
+[Amazon Polly](https://aws.amazon.com/tw/polly/)
 
-### Prerequisites
+### 實時通信
+[Agora RTC](https://www.agora.io/en/)
 
-#### Keys
-- Agora [ App ID ](https://docs.agora.io/en/video-calling/get-started/manage-agora-account?platform=web#create-an-agora-project) and [ App Certificate ](https://docs.agora.io/en/video-calling/get-started/manage-agora-account?platform=web#create-an-agora-project)(certificate is not required)
-- [AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) IAM User's Access key and Secret key
+## 系統架構
 
-#### Installation
-  - [Docker](https://www.docker.com/) / [Docker Compose](https://docs.docker.com/compose/)
-  - [Node.js(LTS) v18](https://nodejs.org/en)
+### TEN Framework 架構
+![TEN Framework](https://github.com/TEN-framework/docs/blob/main/assets/gif/graph_designer.gif?raw=true)
 
-#### Minimum system requirements
-  - CPU >= 2 Core
-  - RAM >= 4 GB
-
-#### Docker setting on Apple Silicon
-You will need to uncheck "Use Rosetta for x86_64/amd64 emulation on Apple Silicon" option for Docker if you are on Apple Silicon, otherwise the server is not going to work.
-
-![Docker Setting](https://github.com/TEN-framework/docs/blob/main/assets/gif/docker_setting.gif?raw=true)
-
-### Next step
-
-#### 1. Modify config files
-In the root of the project, use `cp` command to create `.env` from the example.
-
-It will be used to store information for `docker compose` later.
-```bash
-cp ./.env.example ./.env
-cp ./agents/property.json.example ./agents/property.json
-cp ./playground/.env.example ./playground/.env
+### 數據流架構
+```
++----------------+    +------------------+    +----------------+
+|                |    |                  |    |                |
+|   Agora RTC    +---->  Transcribe ASR  +---->  Bedrock LLM   |
+|                |    |                  |    |                |
++-------+--------+    +------------------+    +--------+-------+
+        ^                                              |
+        |                                              |
+        |                                              v
+        |                                     +----------------+
+        |                                     |                |
+        +-------------------------------------+   Polly TTS    |
+                                              |                |
+                                              +----------------+
 ```
 
-#### 2. Setup API keys
-Open the `.env` file and fill in the `keys` and `regions`. This is also where you can choose to use any different `extensions`:
-```bash
-# Agora App ID and Agora App Certificate
-AGORA_APP_ID=
-# Leave empty unless you have enabled the certificate within the Agora account.
-AGORA_APP_CERTIFICATE=
+## 後端技術
 
-# Extension: bedrock_llm
-# Extension: polly_tts
-# Extension: transcribe_asr
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
+### 框架
 
-# model id supported by Bedrock Converse API, the model you choose should support system prompt. https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
-AWS_BEDROCK_MODEL=mistral.mistral-large-2407-v1:0
+- TEN Framework (Rust)
+- Python Extensions
 
-AWS_REGION=us-east-1 # the Region you're using
+### 雲服務
+
+- AWS Bedrock
+- AWS Transcribe
+- AWS Polly
+- AWS CloudFront
+- Agora RTC
+
+### 部署
+
+- Docker
+- Docker Compose
+
+### 版本控制
+
+- Git / GitHub
+
+## 前端技術
+
+- HTML / CSS / JavaScript
+- WebRTC
+- WebSocket
+- Next.js
+
+## 擴展配置
+
+Cloud_Ninjas_Agent 使用 JSON 配置文件定義擴展和數據流。以下是主要的擴展配置：
+
+### Amazon Bedrock LLM 擴展
+
+```json
+{
+  "type": "extension",
+  "extension_group": "bedrock",
+  "addon": "bedrock_llm_python",
+  "name": "bedrock_llm",
+  "property": {
+    "region": "us-west-2",
+    "access_key": "XXXXXXXXXXXXX",
+    "secret_key": "XXXXXXXXXXXXX",
+    "model": "us.amazon.nova-pro-v1:0",
+    "max_tokens": 512,
+    "prompt": "",
+    "greeting": "長春集團石虎機器人已上線，我可以幫助你什麼",
+    "max_memory_length": 10,
+    "enable_function_calling": true
+  }
+}
 ```
 
-#### 3. Start agent development containers
-In the same directory, run the `docker compose up` command to compose containers:
-```bash
-docker compose up
+### Amazon Transcribe 擴展
+
+```json
+{
+  "type": "extension",
+  "extension_group": "asr",
+  "addon": "transcribe_asr",
+  "name": "transcribe_asr",
+  "property": {
+    "region": "us-west-2",
+    "access_key": "XXXXXXXXXXXXX",
+    "secret_key": "XXXXXXXXXXXXX",
+    "sample_rate": "16000",
+    "lang_code": "zh-TW"
+  }
+}
 ```
 
-### Finish and verify 🎉
+### Amazon Polly 擴展
 
-#### Astra multimodal agent
-Open up http://localhost:3000 in browser to play and test the Astra agent.
+```json
+{
+  "type": "extension",
+  "extension_group": "tts",
+  "addon": "polly_tts",
+  "name": "polly_tts",
+  "property": {
+    "region": "us-west-2",
+    "access_key": "XXXXXXXXXXXXX",
+    "secret_key": "XXXXXXXXXXXXX",
+    "engine": "neural",
+    "voice": "Zhiyu",
+    "sample_rate": "16000",
+    "lang_code": "cmn-CN"
+  }
+}
+```
 
-#### Graph designer
+### 功能擴展
 
-Open up another tab go to http://localhost:3001, and use Graph Designer to create, connect and edit extensions on canvas.
+系統支援使用 function calling 擴展功能，例如計算器：
 
-![TEN Graph Designer](https://github.com/TEN-framework/docs/blob/main/assets/gif/graph_designer.gif?raw=true)
-
-<br>
-<h2>Astra Agent Comparison</h2>
-
-<div align="center">
-
-| **Features**                             | **Astra Agent** | **Pipecat** | **LiveKit:KITT** | **Vapi.ai** | **DailyBots** | **Play.ai** |
-|:----------------------------------------:|:-------:|:--------:|:-------------:|:----------------:|:----------------:|:----------------:|
-| **Vision**                               |   ✅    |    ❌    |      ❌       |     ❌     |     ❌      |     ❌       |
-| **Rich TTS Support for different languages** |   ✅    |    ❌    |      ❌       |     ❌      |     ❌      |     ❌      |
-| **Go support for extension**              |   ✅    |    ❌    |      ❌       |     ❌     |      ❌     |     ❌      |
-| **C++ support for extension**             |   ✅    |    ❌    |      ❌       |     ❌     |      ❌     |     ❌      |
-| **RAG support**                          |   ✅    |    ❌    |      ❌       |     ❌     |      ❌     |     ❌      |
-| **Workflow builder for extension**        |   ✅    |    ❌    |      ❌       |     ✅      |     ❌     |     ❌      |
-| **Rich LLM Support**                      |   ✅    |    ✅    |      ✅       |     ✅     |     ✅     |    ✅      |
-| **Python support for extension**          |   ✅    |    ✅    |      ✅       |     ✅     |     ✅      |     ✅     |
-| **Open source**                          |   ✅    |    ✅    |      ✅       |     ❌     |     ❌      |     ❌      |
-
-</div>
-
-<br>
-<h2>Stay Tuned</h2>
-
-Before we dive further, be sure to star our repository and get instant notifications for all new releases!
-
-![TEN star us gif](https://github.com/TEN-framework/docs/blob/main/assets/gif/star_the_repo_confetti_higher_quality.gif?raw=true)
-
-<br>
-<h2>Join Community</h2>
-
-- [Discord](https://discord.gg/VnPftUzAMJ): Ideal for sharing your applications and engaging with the community.
-- [GitHub Discussion](https://github.com/TEN-framework/astra.ai/discussions): Perfect for providing feedback and asking questions.
-- [GitHub Issues](https://github.com/TEN-framework/astra.ai/issues): Best for reporting bugs and proposing new features. Refer to our [contribution guidelines](./docs/code-of-conduct/contributing.md) for more details.
-- [X (formerly Twitter)](https://img.shields.io/twitter/follow/AstraAIAgent?logo=X&color=%20%23f5f5f5): Great for sharing your agents and interacting with the community.
-
-
- <br>
- <h2>Code Contributors</h2>
-
-[![TEN](https://contrib.rocks/image?repo=TEN-framework/astra.ai)](https://github.com/TEN-framework/astra.ai/graphs/contributors)
-
-<br>
-<h2>Contribution Guidelines</h2>
-
-Contributions are welcome! Please read the [contribution guidelines](./docs/code-of-conduct/contributing.md) first.
-
-<br>
-<h2>License</h2>
-
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
+```json
+"calculator": {
+  "description": "計算加減乘除的工具，可以處理基本數學運算",
+  "inputSchema": {
+    "operation": "運算類型，支持: add, subtract, multiply, divide",
+    "numbers": "要計算的數字列表"
+  }
+}
+```
