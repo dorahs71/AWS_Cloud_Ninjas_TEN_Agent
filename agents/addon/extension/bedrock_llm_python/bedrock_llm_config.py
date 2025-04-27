@@ -14,7 +14,8 @@ class BedrockLLMConfig:
             mode: str,
             user_template: str,
             input_language: str,
-            output_language: str):
+            output_language: str,
+            enable_function_calling: bool = False):
         self.region = region
         self.access_key = access_key
         self.secret_key = secret_key
@@ -27,6 +28,7 @@ class BedrockLLMConfig:
         self.user_template = user_template # user message template
         self.input_language = input_language # model input language, used together with user_template
         self.output_language = output_language # model output language, used together with user_template
+        self.enable_function_calling = enable_function_calling
 
     @classmethod
     def default_config(cls):
@@ -44,6 +46,7 @@ class BedrockLLMConfig:
             user_template='',
             input_language = '',
             output_language='',
+            enable_function_calling=False,
         )
 
     def validate(self):
@@ -69,3 +72,6 @@ class BedrockLLMConfig:
         else:
             logger.error(f"unknown mode: {self.mode}, fallback to 'chat'")
             self.mode = 'chat'
+        
+        if self.enable_function_calling and "nova" not in self.model.lower():
+            logger.warning(f"Function calling is enabled but model {self.model} may not support it. Nova models are recommended.")
